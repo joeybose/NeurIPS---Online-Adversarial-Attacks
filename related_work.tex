@@ -1,0 +1,60 @@
+\section{Related Work}
+%Adversarial attacks against deep neural networks were first introduced in \citep{szegedy2013intriguing,goodfellow2014explaining} and since then the field has experienced an explosion of interest in both whitebox settings \cite{madry2017towards,moosavi2016deepfool,carlini2017towards} and more realistic blackbox settings \cite{chen2017zoo,ilyas2018black, jiang2019black,bose2020adversarial, bhambri2019survey,chakraborty2018adversarial}. 
+\xhdr{Adversarial attacks} The idea of attacking deep neural networks was first introduced in \citep{szegedy2013intriguing,goodfellow2014explaining}, and recent years have witnessed the introduction of challenging threat models, such as blackbox attacks \cite{chen2017zoo,ilyas2018black, jiang2019black,bose2020adversarial,chakraborty2018adversarial} as well as defense strategies \cite{madry2017towards,tramer2017ensemble,Ding2020MMA}.
+Closest to our setting are adversarial attacks against real-time systems \cite{gong2019real, gong2019remasc} and more broadly against deep reinforcement learning agents \cite{lin2017tactics,sun2020stealthy}. However, unlike our work, these approaches are not online algorithms and do not impose constraints of transiency and online attack budgets. 
+%Finally, prevalent defence strategies against adversarial attacks include forms of adversarial training which can be interpreted as training classifiers via robust optimization \cite{madry2017towards,tramer2017ensemble,Ding2020MMA}.
+
+\xhdr{$k$-secretary} The classical secretary problem was originally proposed by \cite{gardner1960mathematical} and later solved in \cite{dynkin1963optimum} with an $(1/e)$-optimal algorithm. \citet{kleinberg2005multiple} introduced the $k$-secretary problem and an asymptotically optimal algorithm which achieves a competitive ratio of $1 - \Theta(\sqrt{1/k})$. 
+%In the small $k$-regime, \citep{babaioff2007knapsack} proposed both the \textsc{Virtual} and \textsc{Optimistic} algorithms which are $(1/e)$-competitive.\textsc{Single-Ref} \cite{albers2019improved} further improves upon this result by introducing a new hyperparameter called the reference rank and a tuned threshold. 
+As outlined in \S\ref{connection_to_prior_work} for $k = 2$ an optimal algorithm exists \cite{chan2014revealing}, but requires the analysis of involved LPs that grow with the size of $\mathcal{D}$. A parallel line of work dubbed the prophet secretary problem, considers online problems where---unlike \S\ref{stochastic_secretary_algorithms_section}---some information on the distribution of values is known \textit{a priori}~\cite{azar2014prophet, azar2018prophet, esfandiari2017prophet}. Secretary problems have also been applied to machine learning, via machine-learned advice which informs the online algorithm about the inputs before execution \cite{antoniadis2020secretary,dutting2020secretaries}. 
+Finally, other interesting secretary settings, in addition to the random order model, include playing with adversaries \cite{bradac2019robust, kaplan2020competitive}.
+
+
+
+
+% Prophet Papers:
+% -Yossi Azar, Ashish Chiplunkar, and Haim Kaplan.
+% Prophet secretary: Surpassing the 1 − 1/e barrier. In Proceedings of the 2018 ACM Conference
+% on Economics and Computation (EC), pages 303–co
+% 318, 2018.
+
+% -José R. Correa, Raimundo Saona, and Bruno Ziliotto.
+% Prophet secretary through blind strategies. In Proceedings of the 30th Annual ACM-SIAM Symposium
+% on Discrete Algorithms (SODA), pages 1946–1961,
+% 2019.
+
+% -Soheil Ehsani, MohammadTaghi Hajiaghayi, Thomas
+% Kesselheim, and Sahil Singla. Prophet secretary for
+% combinatorial auctions and matroids. In Proceedings of the 29th Annual ACM-SIAM Symposium on
+% Discrete Algorithms (SODA), pages 700–714, 2018.
+
+% -Hossein Esfandiari, MohammadTaghi Hajiaghayi,
+% Vahid Liaghat, and Morteza Monemizadeh. Prophet
+% secretary. SIAM Journal on Discrete Mathematics,
+% 31(3):1685–1701, 2017.
+
+
+% - Prophet inequalities for i.i.d.
+% random variables from an unknown distribution. In Proceedings of the 2019 ACM Conference on
+% Economics and Computation, page 3–17, 2019.
+
+
+% -Paul D¨utting and Thomas Kesselheim. Posted pricing and prophet inequalities with inaccurate
+% priors. In Proceedings of the 2019 ACM Conference on Economics and Computation, pages 111–
+% 129, 2019.
+
+%Maybe papers - doube check them 
+%Moshe Babaioff, Michael Dinitz, Anupam Gupta, Nicole Immorlica, and Kunal Talwar. Secretary problems: weights and discounts. 
+%A simple o (log log (rank))-competitive algorithm for the matroid secretary problem
+%%Moshe Babaioff, Nicole Immorlica, David Kempe, and Robert Kleinberg. Matroid secretary problems.
+%Strong algorithms for the ordinal matroid secretary problem
+%Matroid prophet inequalities and applications to multi-dimensional mechanism design
+%Optimal single-choice prophet inequalities from samples.
+%Strong Algorithms for the Ordinal Matroid Secretary Problem∗
+%Prophet Inequalities for Independent Random Variables from an Unknown Distribution
+%Recent developments in prophet inequalities
+%Prophets, secretaries, and maximizing the probability of choosing the best
+%Competitive analysis with a sample and the secretary problem
+%The secretary problem with independent sampling
+%Prophet secretary for combinatorial auctions and matroids
+
