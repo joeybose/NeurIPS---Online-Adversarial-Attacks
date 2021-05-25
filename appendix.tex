@@ -115,16 +115,16 @@ The constant term of the RHS is a concave function of $\alpha$ that is maximized
 
 \clearpage
 
-
+\input{general_k}
 
 \section{Proof of Theorem~\ref{thm:stochastic_secretary}}
 \label{appendix:proof_thm2}
 We now prove Theorem \ref{thm:stochastic_secretary} in detail, reproduced here for convenience. 
 
 \begin{reptheorem}{thm:stochastic_secretary}
-Let us consider a secretary algorithm, $\mathcal{A}$, that is $C_n$-competitive when given access to the true values $v_i, \,i \in [n]$. When having access to random variables $\mathcal{V}_{i},\, i\in [n]$ such that Eq.~\ref{eq:concentration} holds, $\mathcal{A}$ has a stochastic competitive ratio of at least:  
+Let us consider a secretary algorithm, $\mathcal{A}$, that is $C_n$-competitive when given access to the true values $v_i, \,i \in [n]$. When having access to independent random variables $\mathcal{V}_{i},\, i\in [n]$ such that Eq.~\ref{eq:concentration} holds, $\mathcal{A}$ has a stochastic competitive ratio of at least:  
 \begin{equation}
-    C_n \big(1 - e^{\frac{-\Delta^2}{2\sigma^2}}\big)^{n}
+    C_n \left( 1-e^{- \frac{\Delta}{2 \sigma^2}} \right)^{\frac{-2 \exp(- \frac{\Delta}{2 \sigma^2})}{1 -  \exp(\frac{-\Delta}{\sigma^2})}}
 \end{equation}
 \end{reptheorem}
 
@@ -171,19 +171,48 @@ we have that the expected number indices in $S^*$ picked by $\mathcal{A}^{s}$ is
 %      \geq \sum
 %      _{a=1}^k \sP[i_a^{(s)} \in S^{(s)} \text{ and } i_a^{(s)} \in S^*]
 % \end{equation}
-Now, notice that without loss of generality we can consider that $v_1 \geq \dots \geq v_n$, thus,  
+Now, notice that without loss of generality we can consider that $v_1 \geq \dots \geq v_n$. Let us call, $\bar v:= \frac{v_k + v_{k+1}}{2}$, if we have $\mathcal{V}_{i_a^*} \geq \bar v \geq \mathcal{V}_{i_b^*}$ for $1 \leq a \leq k < b \leq n$ then we will have $S^*=S^*_s$. Let us formally bound this probability,
 \begin{align*}
     \sP(S^*=S^*_s) 
-    &\geq \sP(\mathcal{V}_{i_1^*} \geq \ldots \geq \mathcal{V}_{i_n^*})  \\
-    & \geq \sP(\mathcal{V}_{i_1^*} \geq v_1 - \Delta  \geq  v_2 + \Delta \geq \mathcal{V}_{i_2^*} \geq \ldots \geq  \mathcal{V}_{i_n^*}) \\
-     & \geq \sP(|\mathcal{V}_{i_a^*} - v_a| \leq  \Delta, \,a \in [n]) \\
-    & = \prod_{i=1}^n\sP( |\mathcal{V}_i-v_i| \leq \Delta) \\
-    & \geq (1 - e^{\frac{-\Delta^2}{2\sigma^2}})^{n}
+    &\geq \sP(\mathcal{V}_{i_1^*}, \ldots, \mathcal{V}_{i_k^*} \geq \ldots \geq \mathcal{V}_{i_{k+1}^*} , \ldots, \mathcal{V}_{i_n^*})  \\
+     & \geq \sP(\mathcal{V}_{i_a^*} \geq \bar v \geq \mathcal{V}_{i_b^*}\,,\,1 \leq a \leq k < b \leq n) \\
+    & \geq \sP(\mathcal{V}_{i_a^*} \geq v_a - (2(k-a)+1)\Delta\,,\,   v_b + (2(b-k)-1) \Delta \geq  \mathcal{V}_{i_b^*}\,,\,1 \leq a \leq k < b \leq n) \\
+\end{align*}
+where is the last inequality we used that because $\Delta = \tfrac{1}{2}\min_{1\leq i \neq j \leq  n } \{\mid v_i - v_j \mid \}
+$ we have
+\begin{equation}
+    v_a - (2(k-a)+1)\Delta \geq \bar v \geq  v_b + (2(b-k)-1) \Delta \,, \quad \forall \, 1 \leq a \leq k < b \leq n \,.
+\end{equation}
+Finally, using that the random variable $\mathcal{V}_i$ are independents we have,
+\begin{align*}
+    \sP(S^*=S^*_s)      
+    & \geq \sP(|\mathcal{V}_{i_a^*} - v_a| \leq  2|k+1/2-a|\Delta, \,a \in [n]) \\
+    & = \prod_{a=1}^n \sP(|\mathcal{V}_{i_a^*} - v_a| \leq  2|k+1/2-a|\Delta) \\
+    & \geq \prod_{i=1}^n  (1 - e^{\frac{-2|k+1/2-i|\Delta}{2\sigma^2}})
 \end{align*}
 Where for the last inequality we used the assumption that 
 \begin{equation}
     \sP( |\mathcal{V}_i-v_i| \geq \epsilon) \leq e^{\frac{-\epsilon^2}{2\sigma^2}} \,,\,\forall i \in [n]\,.
-\end{equation} 
+\end{equation}
+
+Finally, we will lower-bound $\sum_{i=1}^n\log (1 - e^{\frac{-2|k+1/2-i|\Delta}{2\sigma^2}})$ by using the fact that for any $x$ such that $0<x<a<1$, we have by concavity of the $\log$,
+\begin{equation}
+    \log(1-x) \geq \log(1-a) x \,.
+\end{equation}
+Thus,
+\begin{align}
+    \sum_{l=1}^n\log (1 - e^{\frac{-2|k+1/2-l|\Delta}{2\sigma^2}}) 
+    & \geq \log(1-e^{- \frac{\Delta}{2 \sigma^2}}) \sum_{l=1}^n e^{\frac{-2|k+1/2-l|\Delta}{2\sigma^2}} \\
+    & \geq -2\log(1-e^{- \frac{\Delta}{2 \sigma^2}}) e^{- \frac{\Delta}{2 \sigma^2}} \sum_{l=1}^{\infty} e^{\frac{-l\Delta}{\sigma^2}} \\
+    & \geq -2\log(1-e^{- \frac{\Delta}{2 \sigma^2}}) \frac{e^{- \frac{\Delta}{2 \sigma^2}} }{1 -  e^{\frac{-\Delta}{\sigma^2}}}
+\end{align}
+Which finally gives us,
+\begin{equation}
+     \sP(S^*=S^*_s)    \geq \left( 1-e^{- \frac{\Delta}{2 \sigma^2}} \right)^{\frac{-2 \exp(- \frac{\Delta}{2 \sigma^2})}{1 -  \exp(\frac{-\Delta}{\sigma^2})}}
+\end{equation}
+
+
+
 Note that we could refine this bound by considering individual gaps $\Delta_i$ and constants $\sigma_i$ and consider $\frac{\Delta}{\sigma^2} = \min_{i \in [n]} \frac{\Delta_i}{\sigma_i}$.
 
 \end{proof}

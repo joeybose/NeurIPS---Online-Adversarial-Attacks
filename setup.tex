@@ -1,27 +1,28 @@
 \section{Background and Preliminaries}
-We first briefly review the classical adversarial attack setup and the $k$-secretary problem that serve as foundations for the online threat model outlined later in \S\ref{online_adversarial_attacks}.
+% We first briefly review the classical adversarial attack setup and the $k$-secretary problem that serve as foundations for the online threat model outlined later in \S\ref{online_adversarial_attacks}.
 
-\subsection{Classical Adversarial Attack Setup}
+\xhdr{Classical Adversarial Attack Setup}
 We are interested in constructing adversarial examples against some fixed 
-target classifier $f_{t}: \mathcal{X} \to \mathcal{Y}$ which consumes input data points $x \in \mathcal{X}$ and labels them with a class label $y \in \mathcal{Y}$. The goal of an adversarial attack is then to produce an adversarial example $x' \in \mathcal{X}$, such that $f_t(x') \neq y$, and where the distance $d(x,x') \leq \gamma$. Then, equipped with a loss function $\ell$ used to evaluate $f_{t}$, an adversarial attack is said to be optimal if \citep{carlini2017magnet, madry2017towards}, 
+target classifier $f_{t}: \mathcal{X} \to \mathcal{Y}$ which consumes input data points $x \in \mathcal{X}$ and labels them with a class label $y \in \mathcal{Y}$. The goal of an adversarial attack is then to produce an adversarial example $x' \in \mathcal{X}$, such that $f_t(x') \neq y$, and where the distance $d(x,x') \leq \gamma$. Then, equipped with a loss $\ell$ used to evaluate $f_{t}$, an attack is said to be optimal if \citep{carlini2017magnet, madry2017towards}, 
 \begin{equation}\label{eq:opt_attack}
     \textstyle x' \in \argmax_{x'\in \gX}\ell(f_{t}(x'),y) \,, \;\; \text{s.t.} \;\; d(x,x') \leq \gamma \,.
 \end{equation}
 Note that the formulation above makes no assumptions about access and resource restrictions imposed upon the adversary. Indeed, if the parameters of $f_t$ are readily available, we arrive at the familiar whitebox setting, and problem in \eqref{eq:opt_attack} is solved by following the gradient $\nabla_x f_{t}$ that maximizes $\ell$. 
 
-\subsection{k-Secretary Problem}
-The secretary problem is a well-known problem in theoretical computer science \cite{dynkin1963optimum,ferguson1989solved}. Suppose that we are tasked with hiring a secretary from a randomly ordered set of $n$ potential candidates to select the secretary with maximum value. The secretaries are interviewed sequentially and reveal their actual value on arrival. Thus, the decision to accept or reject a secretary must be made immediately, irrevocably, and without knowledge of future candidates. While there exist many generalizations of this problem, in this work, we consider one of the most canonical generalizations known as the \textit{$k$-secretary problem} \cite{kleinberg2005multiple}. Here, instead of choosing the best secretary, we are tasked with choosing $k$ candidates to maximize the expected sum of values. Typically, online algorithms that attempt to solve secretary problems are evaluated using the competitive ratio, which is the value of the objective achieved by an online algorithm compared to an optimal value of the objective that is achieved by an ideal ``offline algorithm,” i.e., an algorithm with access to the entire candidate set. Formally, an online algorithm $\mathcal{A}$ that selects a subset of items $S_{\mathcal{A}}$  is said to be $C_n$-competitive to the optimal algorithm $\textrm{OPT}$ which greedily selects a subset of items $S^*$ while having full knowledge of all $n$ items, if 
+\xhdr{k-Secretary Problem}
+The secretary problem is a well-known problem in theoretical computer science \cite{dynkin1963optimum,ferguson1989solved}. Suppose that we are tasked with hiring a secretary from a randomly ordered set of $n$ potential candidates to select the secretary with maximum value. The secretaries are interviewed sequentially and reveal their actual value on arrival. Thus, the decision to accept or reject a secretary must be made immediately, irrevocably, and without knowledge of future candidates. While there exist many generalizations of this problem, in this work, we consider one of the most canonical generalizations known as the \textit{$k$-secretary problem} \cite{kleinberg2005multiple}. Here, instead of choosing the best secretary, we are tasked with choosing $k$ candidates to maximize the expected sum of values. Typically, online algorithms that attempt to solve secretary problems are evaluated using the competitive ratio, which is the value of the objective achieved by an online algorithm compared to an optimal value of the objective that is achieved by an ideal ``offline algorithm,” i.e., an algorithm with access to the entire candidate set. Formally, an online algorithm $\mathcal{A}$ that selects a subset of items $S_{\mathcal{A}}$  is said to be $C$-competitive to the optimal algorithm $\textrm{OPT}$ which greedily selects a subset of items $S^*$ while having full knowledge of all $n$ items, if asymptotically in $n$
 \begin{equation}
-    \mathbb{E}_{\pi\sim \mathcal{S}_n}[\setvaluemath(S_{\mathcal{A}})] \geq  C_n  \setvaluemath(S^*) \,,
+    \mathbb{E}_{\pi\sim \mathcal{S}_n}[\setvaluemath(S_{\mathcal{A}})] \geq  (C + o(1)) \setvaluemath(S^*) \,,
     \label{eq:comp_ration}
 \end{equation}
-where \setvalue\ is a set-value function that determines the sum utility of each algorithm's selection, and the expectations are over permutations sampled from the symmetric group of $n$ elements, $\mathcal{S}_n$, acting on the data stream.
-Moreover, $\mathcal{A}$ is said to be asymptotically $C$-competitive, if for $n \to \infty$,
+where \setvalue\ is a set-value function that determines the sum utility of each algorithm's selection, and the expectations are over permutations sampled from the symmetric group of $n$ elements, $\mathcal{S}_n$, acting on the data stream. In \S\ref{stochastic_k_secretary}, we shall further generalize the $k$-secretary problem to its stochastic variant---along with an accompanying definition of a stochastic competitive ratio---where the online algorithm is no longer privy to the actual values but must instead choose under uncertainty.
+
+\cut{
 \begin{equation*}
     \mathbb{E}_{\pi\sim \mathcal{S}_n}[\setvaluemath(S_{\mathcal{A}})] \geq  (C + o(1)) \setvaluemath(S^*) \,.
     \label{eq:asym_omp_ration}
 \end{equation*}
+}
 
-In \S\ref{stochastic_k_secretary}, we shall further generalize the $k$-secretary problem to its stochastic variant---along with an accompanying definition of a stochastic competitive ratio---where the online algorithm is no longer privy to the actual values but must instead choose under uncertainty.
 
 

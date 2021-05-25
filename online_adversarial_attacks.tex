@@ -1,31 +1,11 @@
 \section{Online Adversarial Attacks}
 \label{online_adversarial_attacks}
-Motivated by our more realistic threat model, we now consider a novel adversarial attack problem where the data is no longer static but arrives in an online fashion.
+Motivated by our more realistic threat model, we now consider a novel adversarial attack setting where the data is no longer static but arrives in an online fashion.
 
 \subsection{Adversarial Attacks as Secretary Problems}
 \label{adv_sec_problem}
 The defining feature of the online threat model---in addition to streaming data and the fact that we may not have access to the target model $f_t$---is the online attack budget constraint.
 Choosing when to attack under a fixed budget in the online setting can be related to a secretary problem. We formalize this online adversarial attack problem in the online threat model below.
-
-
-\begin{ftheo}
-The online threat model relies on the following key definitions:
-\begin{itemize}[leftmargin=*, itemsep=1pt, topsep=1pt, parsep=1pt]
-\item 
-\textbf{The target model $f_t$}. The adversarial goal is to attack some target model $f_t : \mathcal{X} \rightarrow \mathcal{Y}$, through adversarial examples that respect a chosen distance function with tolerance $\gamma$ --i.e. $d(x,x') \leq \gamma$ 
-
-\item
-\textbf{The data stream $\mathcal{D}$}. The data stream $\mathcal{D}$ contains the $n$ examples $(x_i,y_i)$ ordered by their time of arrival, that attacker seeks to corrupt. At any timestep $i$, the adversary receives the corresponding item in $\mathcal{D}$ and must decide whether to execute an attack or forever forego the chance to attack this item.
-
-\item
-\textbf{Online attack budget $k$}. The adversary is limited to a maximum of $k$ attempts to craft adversarial examples within the online setting thus imposing that each attack is on a unique item in $\mathcal{D}$.
-
-\item
-\textbf{A value function $\mathcal{V}$}. Each item in the dataset is assigned a value on arrival by the value function $\mathcal{V}: \mathcal{X} \times \mathcal{Y} \rightarrow \mathbb{R}_+$ which represents the utility of selecting the item to craft an attack. This can be the likelihood of a successful attack under $f_t$ (true value) or a stochastic estimate of the incurred loss given by a surrogate model $f_s \approx f_t$.
-\end{itemize}
-
-The online threat model corresponds to the setting where the adversary seeks to craft adversarial attacks (i) against a target model $f_t \in \gF$, (ii) by observing items in $\mathcal{D}$ that arrive online, (iii) and choosing $k$ optimal items to attack by relying on (iv) an available value function $\mathcal{V}$. The adversary's objective is then to use its value function towards selecting items in $\mathcal{D}$ that maximize the sum total value of selections \setvalue\ (Eq.~\ref{eq:asp}).
-\end{ftheo}
 
 In the online threat model we are given a data stream $\mathcal{D}=\{(x_1,y_1),\ldots,(x_n,y_n)\}$ of $n$ samples ordered by their time of arrival. In order to craft an attack against the target model $f_t$, the adversary selects, using its online algorithm $\mathcal{A}$, a subset $S_{\mathcal{A}} \subset \mathcal{D}$ of items to maximize: %\footnote{$S_{\mathcal{A}}$ contains either indexes or elements of the datastream.}
 \begin{equation}\label{eq:asp}
@@ -39,18 +19,32 @@ In the online threat model we are given a data stream $\mathcal{D}=\{(x_1,y_1),\
 \end{equation}
 }
 where $\textsc{Att}(x)$ denotes an attack on $x$ crafted by a \emph{fixed} attack method $\textsc{Att}$ that might or might not depend on $f_t$. From now on we define $x_i'=\textsc{Att}(x_i)$. 
-Intuitively, the adversary chooses $k$ instances that are the ``easiest" to attack, i.e. samples that result in the highest value. 
-
-Note that selecting an instance to attack does not guarantee a successful attack.
+Intuitively, the adversary chooses $k$ instances that are the ``easiest" to attack, i.e. samples that result in the highest value. Note that selecting an instance to attack does not guarantee a successful attack.
 Indeed, a successful attack vector may not exist if the perturbation budget $\gamma$ is too small even though the value is maximized. However, stating the adversarial goal as maximizing the value of $S_{\mathcal{A}}$ leads to the measurable objective of calculating the ratio of successful attack vectors in $S_{\mathcal{A}}$ versus $S^*$.
 
 If the adversary knows the true value of a datapoint then the online attack problem reduces to the original $k$-secretary. On the other hand, the adversary might not have access to $f_t$ and instead, the adversary's value function may be an estimate of the true value---e.g.\ the loss of a surrogate classifier, and the adversary must make selection decisions in the face of uncertainty, yielding a stochastic generalization of the $k$-secretary problem. The theory developed in this paper will tackle both the case where values $v_i:=\ell(f_t(x_i'),y_i)$ for $i \in \{1,\ldots,n\} :=[n]$ are known (\S\ref{virtual_plus}), as well as the richer stochastic with only estimates of $v_i\,,\, i \in [n]$ (\S\ref{stochastic_k_secretary}).
 
-\xhdr{Practicality of the Online Threat Model} It is tempting to consider whether in practice the adversary should forego the online attack budget and instead attack every instance. However, such a strategy poses several critical problems when operating in real world online attack scenarios. Chiefly, attacking any instance in $\mathcal{D}$ incurs a non-trivial risk that the adversary is detected by a defense mechanism. Indeed, when faced with stateful defence strategies (e.g. \cite{chen2020stateful}) every additional attacked instance further increases the risk of being detected ad consequently rendering future attack impotent. Moreover, attacking every instance may not be computationally feasible as the attack must occur immediately on arrival. Generally speaking, as conventional adversarial attacks operate by restricting the perturbation to a fraction of the maximum possible change (e.g., $\ell_{\infty}$ attacks) online attacks analogously restrict the time window to a fraction of possible instances to attack. Similarly, knowledge of $n$ is relatively mild and is a factor that the adversary can easily control in practice. For instance, in the autonomous control system example the adversary can choose to be active for a short interval--e.g., when the car is a certain geospatial location--and thus set the value for $n$.
+\begin{ftheo}
+The online threat model relies on the following key definitions:
+\begin{itemize}[leftmargin=*, itemsep=1pt, topsep=1pt, parsep=1pt]
+\item 
+\textbf{The target model $f_t$}. The adversarial goal is to attack some target model $f_t : \mathcal{X} \rightarrow \mathcal{Y}$, through adversarial examples that respect a chosen distance function, $d$, with tolerance $\gamma$. %--i.e. $d(x,x') \leq \gamma$ 
 
-\cut{
-In such a scenario attacking every possible data point (e.g., video frame) is risky as the attacker may be detected by a defense mechanism and every additional attacked instance further increases this risk. Generally speaking, as conventional adversarial attacks operate by restricting the perturbation to a fraction of the maximum possible change (e.g., $\ell_{\infty}$ attacks) online attacks analogously restrict the time window to a fraction of possible instances to attack. Thus we argue that the spirit of adversarial attacks--i.e. the difficulty of being detected--in this online setting is well captured by an online attack budget. Also, we note similar constraints were considered in the RL setting (i.e. attacking a subset of states) by \cite{lin2017tactics, sun2020stealthy}. However, it is important to note this is a factor that the adversary can control in practice. In the autonomous control system example described above the adversary can choose to be active for a short interval--e.g., when the car is a certain geospatial location-- and thus set the value for $N$.}
+\item
+\textbf{The data stream $\mathcal{D}$}. The data stream $\mathcal{D}$ contains the $n$ examples $(x_i,y_i)$ ordered by their time of arrival, that attacker seeks to corrupt. At any timestep $i$, the adversary receives the corresponding item in $\mathcal{D}$ and must decide whether to execute an attack or forever forego the chance to attack this item.
 
+\item
+\textbf{Online attack budget $k$}. The adversary is limited to a maximum of $k$ attempts to craft attacks within the online setting thus imposing that each attack is on a unique item in $\mathcal{D}$.
+
+\item
+\textbf{A value function $\mathcal{V}$}. Each item in the dataset is assigned a value on arrival by the value function $\mathcal{V}: \mathcal{X} \times \mathcal{Y} \rightarrow \mathbb{R}_+$ which represents the utility of selecting the item to craft an attack. This can be the likelihood of a successful attack under $f_t$ (true value) or a stochastic estimate of the incurred loss given by a surrogate model $f_s \approx f_t$.
+\end{itemize}
+
+The online threat model corresponds to the setting where the adversary seeks to craft adversarial attacks (i) against a target model $f_t \in \gF$, (ii) by observing items in $\mathcal{D}$ that arrive online, (iii) and choosing $k$ optimal items to attack by relying on (iv) an available value function $\mathcal{V}$. The adversary's objective is then to use its value function towards selecting items in $\mathcal{D}$ that maximize the sum total value of selections \setvalue\ (Eq.~\ref{eq:asp}).
+\end{ftheo}
+
+
+\xhdr{Practicality of the Online Threat Model} It is tempting to consider whether in practice the adversary should forego the online attack budget and instead attack every instance. However, such a strategy poses several critical problems when operating in real world online attack scenarios. Chiefly, attacking any instance in $\mathcal{D}$ incurs a non-trivial risk that the adversary is detected by a defense mechanism. Indeed, when faced with stateful defence strategies (e.g. \cite{chen2020stateful}) every additional attacked instance further increases the risk of being detected and consequently rendering future attack impotent. Moreover, attacking every instance may not be computationally feasible as the attack must occur immediately on arrival. Generally speaking, as conventional adversarial attacks operate by restricting the perturbation to a fraction of the maximum possible change (e.g., $\ell_{\infty}$ attacks) online attacks analogously restrict the time window to a fraction of possible instances to attack. Similarly, knowledge of $n$ is relatively mild and is a factor that the adversary can easily control in practice. For instance, in the autonomous control system example the adversary can choose to be active for a short interval--e.g., when the car is a certain geospatial location--and thus set the value for $n$.
 
 \subsection{\algoname\ for Adversarial Secretary Problems}
 \label{virtual_plus}
@@ -59,7 +53,7 @@ Let us first consider the deterministic variant of the online threat model, wher
 %\setlength{\textfloatsep}{5pt}% Remove \textfloatsep
 
 \begin{minipage}[t]{.49\textwidth}
-\vspace{0pt}
+\vspace{-15pt}
 \begin{algorithm}[H]
 \small
 \textbf{Inputs:} $t\in[k\dots n-k]$, $R = \emptyset$, $S_{\mathcal{A}} = \emptyset$
@@ -102,7 +96,7 @@ Let us first consider the deterministic variant of the online threat model, wher
 \hfill
 \begin{minipage}[t]{.48\textwidth}
 \begin{figure}[H]
- %\vspace{-5pt}
+ \vspace{-15pt}
     \includegraphics[width=1.01\linewidth]{Figures/Virtual+_algo.pdf}
     \vspace{-10pt}
     \caption{\algoname \ observes $v_i$ (or estimates) and maintains $R$ during the sampling phase. Items are then picked into $S_{\mathcal{A}}$, after threshold $t$, \cut{via comparisons to $R$.}}
@@ -135,18 +129,36 @@ Let us first consider the deterministic variant of the online threat model, wher
 
 Well known single threshold-based algorithms that solve the $k$-secretary problem include the \textsc{Virtual}, \textsc{Optimistic} \cite{babaioff2007knapsack} and the recent \textsc{Single-Ref} algorithm \cite{albers2019improved}. In a nutshell, these online algorithm consists of two phases---a \textit{sampling phase} followed by a \textit{selection phase}---and an optimal stopping point $t$ (threshold) that is used by the algorithm to transition between the phases. In the sampling phase, the algorithms passively observe all data points up to a pre-specified threshold $t$. Note that $t$ itself is algorithm-specific and can be chosen by solving a separate optimization problem. Additionally, each algorithm also maintains a sorted reference list $R$ containing the top-$k$ elements. Each algorithm then executes the selection phase through comparisons of incoming items to those in $R$ and possibly updating $R$ itself in the process (see~\S\ref{appendix:classical_online_algorithms}).
 
-Indeed, the simple structure of both the \textsc{Virtual} and \textsc{Optimistic} algorithms---e.g., a having few hyperparameters and not requiring the algorithm to involve linear programs for varying values of $n$ and $k$---in addition to being $(1/e)$-competitive (optimal for $k=1$) make them suitable candidates for solving \eqref{eq:asp}. However, 
-the competitive ratio of both algorithms in the small $k$ regime---but not $k=1$---has shown to be sub-optimal with \textsc{Single-Ref} provably yielding larger competitive ratios at the cost of an additional hyperparameters (the reference element in $R$ and $t$) selected via combinatorial optimization when $n \to \infty$. 
+Indeed, the simple structure of both the \textsc{Virtual} and \textsc{Optimistic} algorithms---e.g., having few hyperparameters and not requiring the algorithm to involve LP's for varying values of $n$ and $k$---in addition to being $(1/e)$-competitive (optimal for $k=1$) make them suitable candidates for solving \eqref{eq:asp}. However, 
+the competitive ratio of both algorithms in the small $k$ regime---but not $k=1$---has shown to be sub-optimal with \textsc{Single-Ref} provably yielding larger competitive ratios at the cost of an additional hyperparameters selected via combinatorial optimization when $n \to \infty$. 
 
-We now present a novel online algorithm \algoname\ that retains the simple structure of \textsc{Virtual} and \textsc{Optimistic}, with no extra hyperparameters, but which we prove leads for $k=2$ to a competitive ratio greater than $0.42737$, outperforming \textsc{Single-Ref} that achieves $C=0.4119$. Our key insight is derived from re-examining the selection condition in the \textsc{Virtual} algorithm and noticing that it is overly conservative and can be simplified. The \algoname\ algorithm is presented in Algorithm 1, where the removed condition in \textsc{Virtual} (L2-3) is \st{in pink strikethrough}. Concretely, the condition that is used by \textsc{Virtual} but \emph{not} by \algoname\ updates $R$ during the selection phase without actually picking the item as part of the algorithm's selection set $S_{\mathcal{A}}$. Essentially, this condition is theoretically convenient and leads to a simpler analysis by ensuring that the \textsc{Virtual} algorithm never exceeds $k$ selections in $S_{\mathcal{A}}$. \algoname\ removes this conservative $R$ update criteria in favor of a simple to implement condition, $|S_{\mathcal{A}}| \leq k$ line 4 {\color{salmon}(in pink)} for any $k$ and $n$. Furthermore, the modified selection rule also retains the simplicity of \textsc{Virtual} leading to a painless application to online attack problems.
+We now present a novel online algorithm \algoname\ that retains the simple structure of \textsc{Virtual} and \textsc{Optimistic}, with no extra hyperparameters, but leads to a new state-of-the-art competitive ratio for $k<5$. Our key insight is derived from re-examining the selection condition in the \textsc{Virtual} algorithm and noticing that it is overly conservative and can be simplified. The \algoname\ algorithm is presented in Algorithm 1, where the removed condition in \textsc{Virtual} (L2-3) is \st{in pink strikethrough}. Concretely, the condition that is used by \textsc{Virtual} but \emph{not} by \algoname\ updates $R$ during the selection phase without actually picking the item as part of $S_{\mathcal{A}}$. Essentially, this condition is theoretically convenient and leads to a simpler analysis by ensuring that the \textsc{Virtual} algorithm never exceeds $k$ selections in $S_{\mathcal{A}}$. \algoname\ removes this conservative $R$ update criteria in favor of a simple to implement condition, $|S_{\mathcal{A}}| \leq k$ line 4 {\color{salmon}(in pink)}. Furthermore, the new selection rule also retains the simplicity of \textsc{Virtual} leading to a painless application to online attack problems.
 
 \cut{By design, \algoname\ also does not exceed $k$ selections and works for any combination of $k$ and $n$.}
 \xhdr{Competitive ratio of \algoname}
-What appears to be a minor modification in \textsc{Virtual+} compared to \textsc{Virtual} leads to a significantly more involved analysis but a larger competitive ratio. In Theorem 1, we see that \textsc{Virtual+} provably improves in competitive ratio for $k=2$ over both \textsc{Virtual}, \textsc{Optimistic}, and in particular the previous best single threshold algorithm, \textsc{Single-Ref}.
+What appears to be a minor modification in \textsc{Virtual+} compared to \textsc{Virtual} leads to a significantly more involved analysis but a larger competitive ratio. In Theorem 1, we derive the analytic expression that is a tight lower bound for the competitive ratio of \algoname\ for \emph{general}-$k$. We see that \algoname\ provably improves in competitive ratio for $k<5$ over both \textsc{Virtual}, \textsc{Optimistic}, and in particular the previous best single threshold algorithm, \textsc{Single-Ref}.
 
+\begin{theorem}
+The competitive ratio of \algoname \ for the case $k \geq 2$ and where $t = \alpha \cdot n$ can asymptotically be lower bounded by: 
+\begin{equation}
+    C_k >  \max_{\alpha \in [0,1]}  {\alpha}^k \left (\sum_{m = 0}^{k - 1} a_m \ln^m (\alpha)\right) - \alpha a_0
+\end{equation}
+    where 
+\begin{equation}
+    a_m = \sum_{a = m}^{k - 1} \left (\frac{k}{k - 1}\right)^a \frac{(k - 1)^{m - 1}}{m!}(-1)^{m + 1}
+    \, .
+\end{equation}
+For example when $k=2$ asymptotically we have,
+% \vspace{-1mm}
+\begin{equation}
+    C \geq  \max_{\alpha \in [0,1]} \alpha ( 3(1-\alpha) + 2 \alpha \ln(\alpha)) > .4273 > 1/e \, .
+\end{equation}
+\label{thm:K_2_theorem1}
+\end{theorem}
 
+\cut{
+\begin{theorem} For $k=2$, $t= \alpha n\,,\, \alpha \in (0,1)$, the competitive ratio achieved by \algoname\ follows,
 
-\begin{theorem} For $k=2$, if we set $t= \alpha \cdot n\,,\, \alpha \in (0,1)$, the competitive ratio achieved by \algoname\ follows,
 % \begin{equation}
 % % \textstyle
 %     C_n = \frac{t(t+1)}{n} \sum_{j=t+1}^n\tfrac{1}{j(j+1)} \Big(1 + 2 \sum_{p=t+1}^j \tfrac{1}{p-1}\Big)
@@ -154,7 +166,7 @@ What appears to be a minor modification in \textsc{Virtual+} compared to \textsc
 % Particularly for  we get 
 % \vspace{-1mm}
 \begin{equation} \label{eq:lower_bound_alpha}
-    C_n \geq \alpha ( 3(1-\alpha) + 2 \alpha \ln(\alpha)) + \mathcal{O}(1/n)
+    C \geq \alpha ( 3(1-\alpha) + 2 \alpha \ln(\alpha)) + \mathcal{O}(1/n)
     % \vspace{-1mm}
 \end{equation}
 Thus, asymptotically  we have
@@ -165,57 +177,58 @@ Thus, asymptotically  we have
 % \vspace{-6mm}
 \label{thm:K_2_theorem1}
 \end{theorem}
-\begin{proof}[Proof sketch]
-The full proof can be found in \S\ref{appendix:virtual_plus_proof_k_2}. First note that by~\citep[Lem.~3.3]{albers2020new}, we have a competitive ratio for the $k$-secretary problem under any threshold-based algorithm that is equal to 
-\begin{equation}
-   C_n = \tfrac{1}{k}(\mathbb{P}(i_1 \in S_{\mathcal{A}}) + \ldots + \mathbb{P}(i_k \in S_{\mathcal{A}})) \label{eq:C_as_sum_prob}
-\end{equation}
-where $i_a$ is the index of the $a^{th}$ best secretary. 
-Now, let us focus on the case $k=2$.
-When calculating the probability of one of the top-$2$ elements being picked by the algorithm, we must calculate the probability of one of the top-2 elements being picked after the threshold ---i.e., for a given time step $j+1$ between $t+1 \dots n$. A top-$2$ element is picked by \algoname\ if and only if this element appears at that time step and if we haven't already picked $2$ secretaries ($|S_{\mathcal{A}}| < 2$) during the first $j$ steps. Thus, for $a \in \{1,2\}$,
-\begin{align}
-    \mathbb{P}(i_a \in S_{\mathcal{A}}) 
-    % &= \sum_{j=t+1}^n \mathbb{P}(i_a \in S_{\mathcal{A}} \ \text{at time-step }j)  \\
-    &= \tfrac{1}{n}\left(\mathbb{P}_t(|S_{\mathcal{A}}| < 2) +\ldots+ \mathbb{P}_{n-1}(|S_{\mathcal{A}}| < 2)\right)\label{p_picked_equal_not_filled} \notag
-\end{align}
-where $\mathbb{P}_j(E):= \mathbb{P}(E \ \text{in first } j \text{ steps})$ for any event $E$.
-Now, for a given $j$, we compute $\mathbb{P}_j(|S_{\mathcal{A}}| < 2)$ by decomposing the event into the probability of having an empty $S_{\mathcal{A}}$ plus the probability of having $|S_{\mathcal{A}}| = 1$. The computation of the latter is detailed in \S\ref{appendix:virtual_plus_proof_k_2} and summarized in Fig.~\ref{fig:k_2}.
-%\vspace{-1mm}
-\begin{align}
-    \mathbb{P}_j(|S_{\mathcal{A}}| \!=\! 0)
-    =  \tfrac{t(t - 1)}{j (j - 1)},\,
-    \mathbb{P}_j(|S_{\mathcal{A}}| \!=\! 1)
-    = \tfrac{2t}{j(j-1)} \sum_{p = t + 1}^{j}\tfrac{t-1}{p-2} \notag
-%\vspace{-1mm}
-\end{align}
-Overall, by combining the previous equations we get:
-%\vspace{-1mm}
-\begin{equation}
-    C_n = \frac{1}{n}\sum_{j=t}^{n-1}\Big( \frac{t(t - 1)}{j (j - 1)} + 2 \sum_{p = t + 1}^{j}\frac{1}{j}\frac{t}{j - 1}\frac{t-1}{p-2}\Big)
-%\vspace{-1mm}
-\end{equation}
-% \begin{figure}[t]
-%     \centering
-%     \includegraphics[width=.95\linewidth]{Figures/virtual_plus_k_2.pdf}
-%     \vspace{-15pt}
-%     \caption{Probability of having only one element in $S_{\mathcal{A}}$ after $j$ time-steps with the \algoname algorithm.}
-%     \label{fig:k_2_main}
-%     \vspace{-10pt}
-% \end{figure}
-Finally, by lower bounding the sums with integrals we get, 
-\begin{align}
-    C_n \geq 
-    \tfrac{t(t -1)}{n} \left(\tfrac{3}{t}-\tfrac{2\ln(n/t) + 3}{n} - 2(n-t) \left| \tfrac{16}{3 t^3 e^4} \right|\right) \notag
-%\vspace{-1mm}
-\end{align}
-Now, for $t = \alpha n$ with $\alpha \in (0, 1)$, that lower-bound becomes
-%\vspace{-3mm}
-\begin{equation}
-\label{eq:alpha_eqn}
-C \geq \alpha (3 - \alpha(3 - 2\ln (\alpha))) + \mathcal{O}(1/n) \,,\quad \forall \alpha \in (0,1)
-\end{equation}
-The constant term of the RHS is a concave function of $\alpha$ that is maximized for $\alpha^* \approx 0.38240$. Thus, our algorithms achieves a competitive ratio larger than $0.42737$.
-\end{proof}
+}
+% \begin{proof}[Proof sketch]
+% The full proof can be found in \S\ref{appendix:virtual_plus_proof_k_2}. First note that by~\citep[Lem.~3.3]{albers2020new}, we have a competitive ratio for the $k$-secretary problem under any threshold-based algorithm that is equal to 
+% \begin{equation}
+%   C_n = \tfrac{1}{k}(\mathbb{P}(i_1 \in S_{\mathcal{A}}) + \ldots + \mathbb{P}(i_k \in S_{\mathcal{A}})) \label{eq:C_as_sum_prob}
+% \end{equation}
+% where $i_a$ is the index of the $a^{th}$ best secretary. 
+% Now, let us focus on the case $k=2$.
+% When calculating the probability of one of the top-$2$ elements being picked by the algorithm, we must calculate the probability of one of the top-2 elements being picked after the threshold ---i.e., for a given time step $j+1$ between $t+1 \dots n$. A top-$2$ element is picked by \algoname\ if and only if this element appears at that time step and if we haven't already picked $2$ secretaries ($|S_{\mathcal{A}}| < 2$) during the first $j$ steps. Thus, for $a \in \{1,2\}$,
+% \begin{align}
+%     \mathbb{P}(i_a \in S_{\mathcal{A}}) 
+%     % &= \sum_{j=t+1}^n \mathbb{P}(i_a \in S_{\mathcal{A}} \ \text{at time-step }j)  \\
+%     &= \tfrac{1}{n}\left(\mathbb{P}_t(|S_{\mathcal{A}}| < 2) +\ldots+ \mathbb{P}_{n-1}(|S_{\mathcal{A}}| < 2)\right)\label{p_picked_equal_not_filled} \notag
+% \end{align}
+% where $\mathbb{P}_j(E):= \mathbb{P}(E \ \text{in first } j \text{ steps})$ for any event $E$.
+% Now, for a given $j$, we compute $\mathbb{P}_j(|S_{\mathcal{A}}| < 2)$ by decomposing the event into the probability of having an empty $S_{\mathcal{A}}$ plus the probability of having $|S_{\mathcal{A}}| = 1$. The computation of the latter is detailed in \S\ref{appendix:virtual_plus_proof_k_2} and summarized in Fig.~\ref{fig:k_2}.
+% %\vspace{-1mm}
+% \begin{align}
+%     \mathbb{P}_j(|S_{\mathcal{A}}| \!=\! 0)
+%     =  \tfrac{t(t - 1)}{j (j - 1)},\,
+%     \mathbb{P}_j(|S_{\mathcal{A}}| \!=\! 1)
+%     = \tfrac{2t}{j(j-1)} \sum_{p = t + 1}^{j}\tfrac{t-1}{p-2} \notag
+% %\vspace{-1mm}
+% \end{align}
+% Overall, by combining the previous equations we get:
+% %\vspace{-1mm}
+% \begin{equation}
+%     C_n = \frac{1}{n}\sum_{j=t}^{n-1}\Big( \frac{t(t - 1)}{j (j - 1)} + 2 \sum_{p = t + 1}^{j}\frac{1}{j}\frac{t}{j - 1}\frac{t-1}{p-2}\Big)
+% %\vspace{-1mm}
+% \end{equation}
+% % \begin{figure}[t]
+% %     \centering
+% %     \includegraphics[width=.95\linewidth]{Figures/virtual_plus_k_2.pdf}
+% %     \vspace{-15pt}
+% %     \caption{Probability of having only one element in $S_{\mathcal{A}}$ after $j$ time-steps with the \algoname algorithm.}
+% %     \label{fig:k_2_main}
+% %     \vspace{-10pt}
+% % \end{figure}
+% Finally, by lower bounding the sums with integrals we get, 
+% \begin{align}
+%     C_n \geq 
+%     \tfrac{t(t -1)}{n} \left(\tfrac{3}{t}-\tfrac{2\ln(n/t) + 3}{n} - 2(n-t) \left| \tfrac{16}{3 t^3 e^4} \right|\right) \notag
+% %\vspace{-1mm}
+% \end{align}
+% Now, for $t = \alpha n$ with $\alpha \in (0, 1)$, that lower-bound becomes
+% %\vspace{-3mm}
+% \begin{equation}
+% \label{eq:alpha_eqn}
+% C \geq \alpha (3 - \alpha(3 - 2\ln (\alpha))) + \mathcal{O}(1/n) \,,\quad \forall \alpha \in (0,1)
+% \end{equation}
+% The constant term of the RHS is a concave function of $\alpha$ that is maximized for $\alpha^* \approx 0.38240$. Thus, our algorithms achieves a competitive ratio larger than $0.42737$.
+% \end{proof}
 
 \xhdr{Connection to Prior Work}
 \label{connection_to_prior_work}

@@ -7,7 +7,7 @@ of each data point in $\mathcal{D}$ by attacking $f_s$ using their fixed attack 
 (where $\ell$ is the cross-entropy),
 but the decision to submit the attack to $f_t$ is done using an online algorithm~$\mathcal{A}$ (see Alg.~\ref{alg:online_adv_attack}). 
 As representative attack strategies, we use the well-known FGSM attack \citep{goodfellow2014explaining} and a universal whitebox attack in PGD \citep{madry2017towards}. 
-We are most interested in evaluating the online fool rate, which is simply the ratio of successfully executed attacks against $f_t$ out of a possible of $k$ attacks selected by $\mathcal{A}$. Attacks are conducted with respect to the $\ell_\infty$- norm with $\gamma = 0.3$ for MNIST and $\gamma = 0.03125$ for CIFAR-10. The architectures used for $f_s$, $f_t$, and additional metrics (e.g. competitive ratios) can be found in \S\ref{appendix:additional_results}. 
+We are most interested in evaluating the online fool rate, which is simply the ratio of successfully executed attacks against $f_t$ out of a possible of $k$ attacks selected by $\mathcal{A}$. \cut{Attacks are conducted with respect to the $\ell_\infty$- norm with $\gamma = 0.3$ for MNIST and $\gamma = 0.03125$ for CIFAR-10.} The architectures used for $f_s$, $f_t$, and additional metrics (e.g. competitive ratios) can be found in \S\ref{appendix:additional_results}. 
 
 % \setlength{\textfloatsep}{0pt}% Remove \textfloatsep
 \cut{
@@ -56,18 +56,19 @@ We first investigate the utility of using an online algorithm in selecting data 
 %\vspace{-10pt}
 %\begin{small}
 \small
-\caption{Online fool rate on non-robust models using FGSM and PGD attacker and various online algorithms. For a given attack and value of $k$: {\color{g1} $\mathbf{\bullet}$ } at least 97\%,
-\textbf{\color{g2} $\mathbf{\bullet}$} at least 95\%, \textbf{\color{g3}$\mathbf{\bullet}$} at least 90\%, \textbf{\color{g4} $\mathbf{\bullet}$} less than 90\% of the optimal performance achievable given by \textsc{Opt} in \textbf{bold}.}
+\caption{Online fool rate of various online algorithms on non-robust models. For a given attack and value of $k$: {\color{g1} $\mathbf{\bullet}$ } at least 97\%,
+\textbf{\color{g2} $\mathbf{\bullet}$} at least 95\%, \textbf{\color{g3}$\mathbf{\bullet}$} at least 90\%, \textbf{\color{g4} $\mathbf{\bullet}$} less than 90\% of the optimal performance.}% achievable given by \textsc{Opt} in \textbf{bold}.}
+\vspace{-5pt}
 \label{table:non_robust_table1}
  \begin{center}\begin{tabular}{ c c c c c c c c }
  \toprule
- & & \multicolumn{3}{c}{MNIST (Online fool rate in \%)} & \multicolumn{3}{c}{CIFAR-10 (Online fool rate in \%)}\\
+ & & \multicolumn{3}{c}{MNIST (Online fool rate in \%)} & \multicolumn{3}{c}{CIFAR-10  (Online fool rate in \%)}\\
 %  \cmidrule{3-8}
  & Algorithm & $k=10$ & $k=100$ & $k=1000$ & $k=10$ & $k=100$ & $k=1000$ \\
  \midrule
  \multirow{6}{*}{\rotatebox[origin=c]{90}{FGSM}}
  %\multirow{6}{*}{FGSM}
- & \textsc{Naive}& 64.1 $\pm$ 32.2 & 47.8 $\pm$ 30.7 & 45.7 $\pm$ 30.7 & 60.7 $\pm$ 16.1 & 59.2 $\pm$ 6.2 & 59.2 $\pm$ 4.3\\
+ & \textsc{Naive}& 64.1 $\pm$ 33 & 47.8 $\pm$ 31 & 45.7 $\pm$ 31 & 60.7 $\pm$ 17 & 59.2 $\pm$ 6.2 & 59.2 $\pm$ 4.3\\
  & \textsc{Opt}  & \textbf{87.0 $\pm$ 0.5} & \textbf{84.7 $\pm$ 0.5} &  \textbf{83.6 $\pm$ 0.4} & \textbf{86.6 $\pm$ 0.4} & \textbf{87.3 $\pm$ 0.3} &  \textbf{86.5 $\pm$ 0.2} \\
  \cmidrule{2-8}
  %\bottomrule
@@ -81,7 +82,7 @@ We first investigate the utility of using an online algorithm in selecting data 
  \midrule
  %\multirow{6}{*}{PGD}
   \multirow{6}{*}{\rotatebox[origin=c]{90}{PGD}}
- & \textsc{Naive} & 69.7  $\pm$ 15.6 & 67.2 $\pm$ 19.1 & 67.9 $\pm$ 17.4 & 72.5 $\pm$ 17.6 & 70.4 $\pm$ 9.4 & 68.6 $\pm$ 6.3\\
+ & \textsc{Naive} & 69.7  $\pm$ 16 & 67.2 $\pm$ 20 & 67.9 $\pm$ 18 & 72.5 $\pm$ 18 & 70.4 $\pm$ 9.4 & 68.6 $\pm$ 6.3\\
  & \textsc{Opt} & \textbf{73.6 $\pm$ 0.9} & \textbf{49.8 $\pm$ 0.8} & \textbf{49.6 $\pm$ 0.8} & \textbf{83.7 $\pm$ 0.6} & \textbf{80.6 $\pm$ 0.6} & \textbf{79.9 $\pm$ 0.5}\\
  \cmidrule{2-8}
  %\bottomrule
@@ -97,13 +98,16 @@ We first investigate the utility of using an online algorithm in selecting data 
 
 
 \xhdr{Q2: Online Attacks on Non-Robust Classifiers}
-While previous work on online algorithms focused largely on the theoretical contribution, we are equally interested in their performance in practical applications, where the assumptions of the theory may not necessarily hold anymore. We thus decide to propose the first comparison of online algorithms in the context of attacking non-robust MNIST and CIFAR-10 classifiers.  We report the average performance of all online algorithms, \algoname\ with $t=\alpha^* n$ as in Eq.~\ref{eq:alpha_eqn}, and the optimal offline algorithm \textsc{Opt} in Tab.~\ref{table:non_robust_table1}. For MNIST, we find that the two best online algorithms are \textsc{Single-Ref} and our proposed \algoname\ which approach the upper bound provided by \textsc{Opt}. For $k=10$ and $k=100$, \textsc{Single-Ref} is slightly superior while $k=1000$ \algoname\ is the best method with an average relative improvement of $15.3\%$. This is unsurprising as \algoname\ does not have any additional hyperparameters unlike \textsc{Single-Ref} which appears more sensitive to the choice of optimal thresholds and reference ranks, both of which are unknown beyond $k=100$ and non-trivial to find in closed form (see \S\ref{appendix:additional_results_larger_datasets} for details). On CIFAR-10, we observe that \algoname\ is the best approach regardless of attack strategy and the online attack budget $k$. A notable observation is that even relatively simple and common attack strategies like FGSM and PGD can be turned into very strong transfer attack strategies when paired with an appropriate $\mathcal{A}$, highlighting the importance of carefully choosing data points to attack in the online setting. %as a significant factor in achieving high online fool rates. 
+\cut{
+While previous work on online algorithms focused largely on the theoretical contribution, we are equally interested in their performance in practical applications, where the assumptions of the theory may not necessarily hold anymore.}We now conduct experiments on non-robust MNIST and CIFAR-10 classifiers.\cut{
+We thus decide to propose the first comparison of online algorithms in the context of attacking non-robust MNIST and CIFAR-10 classifiers}. We report the average performance of all online algorithms, and the optimal offline algorithm \textsc{Opt} in Tab.~\ref{table:non_robust_table1}. For MNIST, we find that the two best online algorithms are \textsc{Single-Ref} and our proposed \algoname\ which approach the upper bound provided by \textsc{Opt}. For $k=10$ and $k=100$, \textsc{Single-Ref} is slightly superior while $k=1000$ \algoname\ is the best method with an average relative improvement of $15.3\%$. This is unsurprising as \algoname\ does not have any additional hyperparameters unlike \textsc{Single-Ref} which appears more sensitive to the choice of optimal thresholds and reference ranks, both of which are unknown beyond $k=100$ and non-trivial to find in closed form (see \S\ref{appendix:additional_results_larger_datasets} for details). On CIFAR-10, we observe that \algoname\ is the best approach regardless of attack strategy and the online attack budget $k$. A notable observation is that even conventional whitebox adversaries like FGSM and PGD can be turned into strong blackbox transfer attack strategies when carefully choosing datapoints to attack using an appropriate $\mathcal{A}$.%, highlighting the importance of carefully choosing data points to attack in the online setting.  
 
 
 \begin{table*}[ht]
 \small
-\caption{Online fool rate on robust models using FGSM and PGD attacker and various online algorithms. For a given attack and value of $k$: {\color{g1} $\mathbf{\bullet}$ } at least 90\%,
-\textbf{\color{g2} $\mathbf{\bullet}$} at least 80\%, \textbf{\color{g3}$\mathbf{\bullet}$} at least 70\%, \textbf{\color{g4} $\mathbf{\bullet}$} less than 70\% of the optimal performance achievable given by \textsc{Opt} in \textbf{bold}.}
+\caption{Online fool rate of various online algorithms on robust models. For a given attack and value of $k$: {\color{g1} $\mathbf{\bullet}$ } at least 90\%,
+\textbf{\color{g2} $\mathbf{\bullet}$} at least 80\%, \textbf{\color{g3}$\mathbf{\bullet}$} at least 70\%, \textbf{\color{g4} $\mathbf{\bullet}$} less than 70\% of the optimal performance.}% achievable given by \textsc{Opt} in \textbf{bold}.}
+\vspace{-5pt}
 \label{table:madry_challenge}
  \begin{center}\begin{tabular}{ c c c c c c c c}
  \toprule
@@ -137,14 +141,39 @@ While previous work on online algorithms focused largely on the theoretical cont
 
 
 \xhdr{Q3: Online Attacks on Robust Classifiers}
-We now test the feasibility of online attacks against classifiers robustified using adversarial training. To do so, we adapt the public Madry Challenge \citep{madry2017towards} to the online setting, by attacking a subset of the test set as it is streamed. We report the average performance of each online algorithm in Table ~\ref{table:madry_challenge}. We observe that \algoname\ (with $t$ as in Eq.~\ref{eq:alpha_eqn}) is the best online algorithms, outperforming \textsc{Virtual} and \textsc{Optimistic}, in all settings except for $k=10$ on MNIST where \textsc{Single-Ref} is slightly better. An interesting observation for CIFAR-10 is that attacks on robust models in comparison to non-robust models lead to higher success rates in the online setting. We reconcile this counter-intuitive fact by noting that even when $k=1000$, it corresponds to only $10\%$ of the test set while a PGD-attack can transfer with 38.7\%  efficacy on the robust model for the entire test set. Thus, the efficiency of an online attacks requires the ability to detect the optimal examples to attack than the global robustness of a model which is highly influenced by the distribution of $\mathcal{V}_i$. For instance, if the value of the examples that correspond to a successful attack cannot be distinguished from the ones that are unsuccessful, then one cannot hope to use an online algorithm---that only observe values---to always manage to pick successful attacks.
+We now test the feasibility of online attacks against classifiers robustified using adversarial training. To do so, we adapt the public Madry Challenge \citep{madry2017towards} to the online setting, by attacking a subset of the test set as it is streamed. We report the average performance of each online algorithm in Table ~\ref{table:madry_challenge}. We observe that \algoname\ is the best online algorithms, outperforming \textsc{Virtual} and \textsc{Optimistic}, in all settings except for $k=10$ on MNIST where \textsc{Single-Ref} is slightly better. 
+%An interesting observation for CIFAR-10 is that attacks on robust models in comparison to non-robust models lead to higher success rates in the online setting. We reconcile this counter-intuitive fact by noting that even when $k=1000$, it corresponds to only $10\%$ of the test set while a PGD-attack can transfer with 38.7\%  efficacy on the robust model for the entire test set. Thus, the efficiency of an online attacks requires the ability to detect the optimal examples to attack than the global robustness of a model which is highly influenced by the distribution of $\mathcal{V}_i$. For instance, if the value of the examples that correspond to a successful attack cannot be distinguished from the ones that are unsuccessful, then one cannot hope to use an online algorithm---that only observe values---to always manage to pick successful attacks.
 % for non-robust models, there may be many equally attackable, but potentially low-value datapoints ---i.e. the distribution of $\mathcal{V}_i$'s is flat. 
 % Thus attacking these points might not result in transferable attack vectors against $f_t$. 
 % On the other hand, for robust models, there are fewer attackable points and attacking via selections of an online algorithm lead to higher transfer rates on $f_t$. 
-We empirically verify that these distributions of values $\mathcal{V}_i$ for CIFAR-10 robust and non-robust models are relatively different in \S\ref{appendix:visualization_of_values_observed}.
+%We empirically verify that these distributions of values $\mathcal{V}_i$ for CIFAR-10 robust and non-robust models are relatively different in \S\ref{appendix:visualization_of_values_observed}.
 
-
-
-
-
-
+\xhdr{Q4: Differences between the online and offline setting} The online threat model presents several interesting phenomenon that we now highlight. First we observe that a stronger attack (e.g. PGD)---in comparison to weaker ones like FGSM---in the offline setting doesn't necessarily translate to an equivalently stronger attack in the online setting. We explain this phenomenon in Fig.~\ref{fig:fgsm_vs_pgd_loss} \&~\ref{fig:fgsm_vs_pgd_ratio} by plotting the distribution of the loss values and the ratio of unsuccessful attacks to total attacks for PGD and FGSM. We observe that the PGD curve is above the FGSM curve indicating that while PGD is a stronger attacker than FGSM, it is harder for $\mathcal{A}$ to pick successful attacks using PGD. A similar initially counter-intuitive observation can be made when comparing the online fool rate on robust and non-robust classifiers. While it is natural to expect the online fool rate to be lower on robust model we empirically observe the opposite in Tab.~\ref{table:non_robust_table1} and~\ref{table:madry_challenge}. To understand this phenomena we plot the distribution of the ratio of unsuccessful attacks as a function $f_s$'s loss in Fig.~\ref{fig:histogram_Vi}. We observe that non-robust models have a distribution with a heavier tail making it harder for $\mathcal{A}$ to pick successful attacks purely based on loss (see~\S\ref{appendix:visualization_of_values_observed} for more details). 
+\begin{figure}[h]
+\vspace{-15pt}
+    \centering
+    \captionsetup[subfigure]{justification=centering}
+    \begin{subfigure}[b]{0.32\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Figures/fgsm_vs_pgd_loss.pdf}
+    \caption{\small Distribution of $f_t$'s loss values for PGD and FGSM}
+    \label{fig:fgsm_vs_pgd_loss}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Figures/fgsm_vs_pgd_ratio.pdf}
+    \caption{\small Distribution of the ratio of unsuccessful attacks}
+    \label{fig:fgsm_vs_pgd_ratio}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Figures/histogram_Vi.pdf}
+    \caption{\small Distribution of the ratio of unsuccessful attacks}
+    \label{fig:histogram_Vi}
+    \end{subfigure}
+    \caption{\small For every example in MNIST (or CIFAR) we compute an attack using $f_s$ and submit it to $f_t$. \textbf{Left}: The distribution of the normalized loss values of $f_t$ for all attacks where a higher loss is a stronger attack. \textbf{Middle}: The percentage of unsuccessful attacks as a function of $f_s$ normalized loss values. \textbf{Right}: The distribution of the ratio of unsuccessful attacks to total attacks as a function of the $f_s$ normalized loss values.}
+    \label{fig:fgsm_vs_pgd}
+\end{figure}
+\vspace{-20pt}
