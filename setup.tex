@@ -1,4 +1,5 @@
 \section{Background and Preliminaries}
+\vspace{-5pt}
 % We first briefly review the classical adversarial attack setup and the $k$-secretary problem that serve as foundations for the online threat model outlined later in \S\ref{online_adversarial_attacks}.
 
 \xhdr{Classical Adversarial Attack Setup}
@@ -15,7 +16,7 @@ The secretary problem is a well-known problem in theoretical computer science \c
     \mathbb{E}_{\pi\sim \mathcal{S}_n}[\setvaluemath(S_{\mathcal{A}})] \geq  (C + o(1)) \setvaluemath(S^*) \,,
     \label{eq:comp_ration}
 \end{equation}
-where \setvalue\ is a set-value function that determines the sum utility of each algorithm's selection, and the expectations are over permutations sampled from the symmetric group of $n$ elements, $\mathcal{S}_n$, acting on the data stream. In \S\ref{stochastic_k_secretary}, we shall further generalize the $k$-secretary problem to its stochastic variant---along with an accompanying definition of a stochastic competitive ratio---where the online algorithm is no longer privy to the actual values but must instead choose under uncertainty.
+where \setvalue\ is a set-value function that determines the sum utility of each algorithm's selection, and the expectations are over permutations sampled from the symmetric group of $n$ elements, $\mathcal{S}_n$, acting on the data. In \S\ref{stochastic_k_secretary}, we shall further generalize the $k$-secretary problem to its stochastic variant where the online algorithm is no longer privy to the actual values but must instead choose under uncertainty.
 
 \cut{
 \begin{equation*}
@@ -26,3 +27,4 @@ where \setvalue\ is a set-value function that determines the sum utility of each
 
 
 
+\cut{--along with an accompanying definition of a stochastic competitive ratio---}

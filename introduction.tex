@@ -3,16 +3,16 @@
 
 In adversarial attacks, an attacker seeks to maliciously disrupt the performance of deep learning systems by adding small but often imperceptible noise to otherwise clean data~\citep{szegedy2013intriguing,goodfellow2014explaining}. Critical to the study of adversarial attacks is specifying the threat model~\cite{akhtar2018threat}, which outlines the adversarial capabilities of an attacker and the level of information available in crafting attacks. Canonical examples include the \textit{whitebox} threat model~\cite{madry2017towards}, where the attacker has complete access, and the less permissive \textit{blackbox} threat model where an attacker only has partial information, like the ability to query the target model \citep{chen2017zoo,ilyas2017query,papernot2016transferability}. 
 
-Previously studied threat models (e.g., whitebox and blackbox) implicitly assume a static setting with full access to a target dataset~\citep{tramer2017ensemble}. However, such an assumption is unrealistic in many real-world systems. Countless real-world applications involve streaming data that arrive in an online fashion (e.g., financial markets or real-time sensor networks). Understanding the feasibility of adversarial attacks in this {\em online} setting is an essential question. 
+Previously studied threat models (e.g., whitebox and blackbox) implicitly assume a static setting that permits full access to instances in a target dataset at all times~\citep{tramer2017ensemble}. However, such an assumption is unrealistic in many real-world systems. Countless real-world applications involve streaming data that arrive in an online fashion (e.g., financial markets or real-time sensor networks). Understanding the feasibility of adversarial attacks in this {\em online} setting is an essential question. 
 
 As a motivating example, consider the case where the adversary launches a man-in-the-middle attack depicted in Fig.~\ref{fig:man_in_the_middle}. Here, data is streamed between two endpoints---i.e., from sensors on an autonomous car to the actual control system. 
 An adversary, in this example, would intercept the sensor data, potentially perturb it, and then send it to the controller. Unlike classical adversarial attacks, such a scenario presents two key challenges that are representative of all online settings. 
 
-\begin{wrapfigure}{o}{0.5\textwidth}
+\begin{wrapfigure}{o}{0.4\textwidth}
   \vspace{-8pt}
   %\begin{center}
     %\includegraphics[width=0.48\textwidth]{birds}
-    \includegraphics[width=0.48\textwidth]{Figures/man_in_the_middle_attack_2.pdf}
+    \includegraphics[width=0.38\textwidth]{Figures/man_in_the_middle_attack_2.pdf}
   %\end{center}
   \vspace{-2pt}
 \caption{Man-in-the-Middle Attack.}
@@ -20,7 +20,7 @@ An adversary, in this example, would intercept the sensor data, potentially pert
 \end{wrapfigure}
 
 \begin{enumerate}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt, leftmargin=*] 
-    \item \textbf{Transiency:} At every time step, the attacker must make an irrevocable decision on whether to attack the given datapoint. If the attacker fails, or opts not to attack, then that datapoint is no longer available for further attacks.
+    \item \textbf{Transiency:} At every time step, the attacker makes an irrevocable decision on whether to attack and if she fails, or opts not to attack, then that datapoint is no longer available for further attacks.
     \item \textbf{Online Attack Budget:} The adversary---to remain anonymous from stateful defences---is restricted to a small selection budget and must optimally balance a passive exploration phase before selecting high value items in the data stream (e.g. easiest to attack) to submit an attack on.
 \end{enumerate}
 
@@ -31,14 +31,18 @@ To the best of our knowledge, the only existing approaches that craft adversaria
 We formalize the online threat model to study adversarial attacks on streaming data. In our online threat model, the adversary must execute $k$ successful attacks within $n$  streamed data points, where $k \ll n$. As a starting point for our analysis, we study the deterministic online threat model in which the actual value of an input---i.e., the likelihood of a successful attack---is revealed along with the input. Our first insight elucidates that such a threat model, modulo the attack strategy, equates to the $k$-secretary problem known in the field of optimal stopping theory \cite{dynkin1963optimum,kleinberg2005multiple}, allowing for the application of established online algorithms for picking optimal data points to attack. We then propose a novel online algorithm \algoname\ that is both practical, simple to implement for any pair $(k,n)$, and requires no additional hyperparameters.%, making it a natural choice for online adversarial attacks.
  
 
-Besides, motivated by attacking blackbox target models, we also introduce a modified secretary problem dubbed the \textit{stochastic $k$-secretary problem}, which assumes the values an attacker observes are stochastic estimates of the actual value. We prove theoretical bounds on the competitive ratio for \emph{any} classical online algorithms in this setting. Guided by our theoretical results, we conduct a suite of experiments on both toy and standard datasets and classifiers (i.e., MNIST and CIFAR-10). Our empirical investigations reveal two counter-intuitive phenomena that are unique to the online blackbox transfer attack setting: 1.) In certain cases attacking robust models may infact be easier than non-robust models based on the distribution of values observed by an online algorithm. 2.) Simple attack strategies like FGSM can seemingly achieve higher online attack transfer rates than stronger PGD-attackers when paired with a online selection algorithm, demonstrating the importance of carefully selecting which data points to attack. Our key contributions are summarized as follows:
+Besides, motivated by attacking blackbox target models, we also introduce a modified secretary problem dubbed the \textit{stochastic $k$-secretary problem}, which assumes the values an attacker observes are stochastic estimates of the actual value. We prove theoretical bounds on the competitive ratio for \emph{any} classical online algorithms in this setting. Guided by our theoretical results, we conduct a suite of experiments on both toy and standard datasets and classifiers (i.e., MNIST and CIFAR-10). Our empirical investigations reveal two counter-intuitive phenomena that are unique to the online blackbox transfer attack setting: 1.) In certain cases attacking robust models may in fact be easier than non-robust models based on the distribution of values observed by an online algorithm. 2.) Simple attack strategies like FGSM can seemingly achieve higher online attack transfer rates than stronger PGD-attackers when paired with a online selection algorithm, demonstrating the importance of carefully selecting which data points to attack. Our key contributions are summarized as follows:
 
 %We empirically show that even simple attack strategies can achieve high attack transfer rates when paired with an online algorithm, demonstrating the importance of carefully selecting which data points to attack.
 
 
 \begin{itemize}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt,label={\large\textbullet},leftmargin=*]
 \item We formalize the online adversarial attack threat model as an online decision problem and rigorously connect it to a generalization of the k-secretary problem.
-\item We introduce an online algorithm \algoname\ for the $k$-secretary problem and prove that it achieves a new state-of-the-art competitive ratio for $k<5$. Our proof technique also closes the open question in ~\citet{babaioff2007knapsack} by extending the competitive analysis to the general $k$-regime of the original \textsc{Virtual} algorithm to \algoname\ by removing theoretically convenient constraints. %outperforming the previous best single threshold algorithm \textsc{Single-Ref}~\cite{albers2020new}. 
+\item We introduce and analyze \algoname\, an extension of \textsc{Virtual} for the $k$-secretary problem yielding a significant practical improvement ($60\%$). %over \textsc{Virtual}. 
+% and analytically derive a tight lower bound to the competitive ratio for \emph{general}-$k$.
+% \item We propose a modification of the \textsc{Virtual} algorithm for the $k$-secretary problem that yield 
+We then provide, via novel techniques, a tractable formula for its competitive ratio, partially answering one of \citet{albers2020new}'s open questions (see footnote~\footref{foot:closed_form}) and achieving a new state-of-the-art competitive ratio for $k<5$.
 \item We propose Alg.~\ref{alg:online_adv_attack} that leverages (secretary) online algorithms to perform efficient online adversarial attacks. We compare different online algorithms including \algoname\ via experiments on MNIST and CIFAR-10 in the challenging Non-Interactive BlackBox transfer (NoBox) setting.% and show that in many cases our onilne algorithm performs almost as well as an offline algorithm.
 \end{itemize}
 
+%competitive ratio for $k<5$ among all single threshold algorithms. \cut{Our proof technique also closes the open question in ~\citet{babaioff2007knapsack} by extending the competitive analysis to the general $k$-regime of the original \textsc{Virtual} algorithm to \algoname\ by removing theoretically convenient constraints. }

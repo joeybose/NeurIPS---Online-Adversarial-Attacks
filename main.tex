@@ -41,6 +41,7 @@
 \usepackage{amsmath}
 \usepackage{enumitem}
 \usepackage{mdframed}
+%\usepackage[square,numbers]{natbib}
 \usepackage{natbib}
 \usepackage{bbm}
 \usepackage[utf8]{inputenc}
@@ -55,6 +56,7 @@
 \usepackage{wrapfig}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{footmisc}
 
 \newcommand*{\tikzmk}[1]{\tikz[remember picture,overlay,] \node (#1) {};\ignorespaces}
 \newcounter{ggiCounter}
@@ -161,13 +163,14 @@
 \input{experiments}
 \input{related_work}
 \input{conclusion}
-
+\input{broader_impact}
 %\input{acknowledgements}
 %\input{contribution}
 
 \clearpage
 \bibliography{bibliography}
 \bibliographystyle{abbrvnat}
+%\bibliographystyle{plain}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Checklist}
@@ -199,9 +202,9 @@ Checklist section heading above along with the questions/answers below.
   \item Did you describe the limitations of your work?
     \answerYes{Section~\ref{connection_to_prior_work} discusses prior work and~\ref{online_adversarial_attacks} and~\ref{results_on_synthetic_data} show that \algoname\ is optimal up to $k<5$.}
   \item Did you discuss any potential negative societal impacts of your work?
-    \answerNo{}
+    \answerYes{See section~\ref{broader_impact} for examples of broader impact arising from both the Online Threat Model as well as \algoname.}
   \item Have you read the ethics review guidelines and ensured that your paper conforms to them?
-    \answerTODO{}
+    \answerYes{}
 \end{enumerate}
 
 \item If you are including theoretical results...
