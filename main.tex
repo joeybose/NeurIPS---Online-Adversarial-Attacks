@@ -5,7 +5,7 @@
 % before loading neurips_2021
 
 % ready for submission
-\usepackage{neurips_2021}
+% \usepackage{neurips_2021}
 
 % to compile a preprint version, e.g., for submission to arXiv, add add the
 % [preprint] option:
@@ -15,7 +15,9 @@
 %     \usepackage[final]{neurips_2021}
 
 % to avoid loading the natbib package, add option nonatbib:
-%    \usepackage[nonatbib]{neurips_2021}
+\usepackage[nonatbib]{neurips_2021}
+
+\usepackage[square,numbers]{natbib}
 
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
@@ -41,8 +43,6 @@
 \usepackage{amsmath}
 \usepackage{enumitem}
 \usepackage{mdframed}
-%\usepackage[square,numbers]{natbib}
-\usepackage{natbib}
 \usepackage{bbm}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
@@ -151,11 +151,6 @@
 \end{abstract}
 
 
-% Old Abstract
-\cut{
- Adversarial attacks expose important vulnerabilities of deep learning models, yet little attention has been paid to settings where data arrives as a stream. In this paper, we formalize the online adversarial attack problem, emphasizing two key elements found in real-world use-cases: attackers must operate under partial knowledge of the target model, and the decisions made by the attacker are irrevocable since they operate on a transient data stream. We first rigorously analyze a deterministic variant of the online threat model by drawing parallels to the well-studied $k$-\textit{secretary problem} and propose \algoname, a simple yet practical online algorithm yielding a provably better competitive ratio for $k=2$ over the current best single threshold algorithm. We also introduce the \textit{stochastic $k$-secretary}---effectively reducing online blackbox transfer attacks to a $k$-secretary problem under noise---and prove theoretical bounds on the competitive ratios of \textit{any} online algorithms adapted to this setting. Finally, we complement our theoretical results by conducting a systematic suite of experiments on MNIST and CIFAR-10 with both vanilla and robust classifiers, revealing that, by leveraging online secretary algorithms, like \algoname, we can get an online attack success rate close to the one achieved by the optimal offline solution. 
-}
-
 \input{introduction}
 \input{setup}
 \input{online_adversarial_attacks}
@@ -163,7 +158,7 @@
 \input{experiments}
 \input{related_work}
 \input{conclusion}
-\input{broader_impact}
+%\input{broader_impact}
 %\input{acknowledgements}
 %\input{contribution}
 

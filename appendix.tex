@@ -3,9 +3,9 @@
 \section{Proof of Competitive Ratio for \algoname Algorithm}
 \label{appendix:virtual_plus_proof_k_2}
 
-We now prove Theorem \ref{thm:K_2_theorem1} from the main paper reproduced here for convenience. 
+As an illustrative example that aids in understanding the full general-$k$ proof for for the competitive ratio \algoname\ we now prove Theorem \ref{thm:general_k_theorem1} for $k=2$ from the main paper. 
 
-\begin{reptheorem}{thm:K_2_theorem1}  For $k=2$, the competitive ratio achieved by \algoname\ algorithm is equal to,
+\begin{theorem}  For $k=2$, the competitive ratio achieved by \algoname\ algorithm is equal to,
 \begin{equation}
     C_n = \frac{t(t-1)}{n} \sum_{j=t}^{n-1}\frac{1}{j(j-1)} \left(1 + 2 \sum_{ p=t+1}^j \frac{1}{p-1}\right)
 \end{equation}
@@ -17,15 +17,15 @@ Thus, asymptotically  we have
 \begin{equation}
     C >  \max_{\alpha \in [0,1]} \alpha ( 3(1-\alpha) + 2 \alpha \ln(\alpha)) > .4273 > 1/e \, .
 \end{equation}
-\end{reptheorem}
+\end{theorem}
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.50\linewidth]{Figures/virtual_plus_k_2.pdf}
+    \includegraphics[width=1.0\linewidth]{Figures/virtual_plus_k_2.pdf}
     %\includegraphics[width=\linewidth]{Figures/Competitive_RatioVar5.png}
     \caption{Probability of having only one element in $S_{\mathcal{A}}$ after $j$ time-steps with the \algoname\ algorithm.}
     \label{fig:k_2}
-    %\vspace{-5mm}
+    \vspace{-15pt}
 \end{figure}
 
 \begin{proof}
@@ -543,3 +543,4 @@ Indeed, distributions of $\mathcal{V}_i$'s observed, for a specific permutation 
 \label{fig:distrib_values}
 \end{figure}
 
+\input{broader_impact}

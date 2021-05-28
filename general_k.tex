@@ -1,6 +1,7 @@
 \section{Competitive Ratio General $k$}
 \label{app:general_k_proof}
-\begin{theorem}
+We now prove our main result for the competitive ratio of \algoname \ for $k \geq 2$. The theorem statement is reproduced here for convenience.  
+\begin{reptheorem}{thm:general_k_theorem1}
 The competitive ratio of Virtual Plus for the case $k \geq 2$ where $t = \alpha n$ can asymptotically be lower bounded by 
 \begin{equation}
     C_k >  \max_{\alpha \in [0,1]}  {\alpha}^k \left(\sum_{m = 0}^{k - 1} a_m \ln^m (\alpha)\right) - \alpha a_0
@@ -9,15 +10,15 @@ The competitive ratio of Virtual Plus for the case $k \geq 2$ where $t = \alpha 
     \, .
 \end{equation}
 
-\end{theorem}
+\end{reptheorem}
 \begin{figure}[ht]
     \centering
     %\includegraphics[width=0.50\linewidth]{Figures/virtual_plus_general_k.pdf}
-    \includegraphics[width=0.50\linewidth]{Figures/general_k.pdf}
+    \includegraphics[width=1.0\linewidth]{Figures/general_k.pdf}
     %\includegraphics[width=\linewidth]{Figures/Competitive_RatioVar5.png}
     \caption{Virtual+ $k \geq 2$ proof.}
     \label{fig:general_k}
-    %\vspace{-5mm}
+    \vspace{-15pt}
 \end{figure}
 \begin{proof}
 First note that we can show that the competitive ratio for the $k$-secretary problem is equal to 
@@ -133,14 +134,15 @@ Let $f_i \,, \,i = 1 \ldots k$ be decreasing positive functions then we have
 
 \begin{table}[]
     \centering
+    \caption{Values of the Competitive ratio $C_k$ and the associated optimal threshold $\alpha_k$ for \algoname. Note that for $5\leq k\leq 100$ the competitive ratio of \textsc{Single-Ref} provided by~\citet{albers2020new} outperforms \algoname's competitive ratio. However, our analysis provides a tractable way for the competitive ratio that scales with $k$ since the computation of the function to optimize (and its gradients) in Theorem~\ref{thm:K_2_theorem1} is a $\mathcal{O}(k)$.}
+    \vspace{2pt}
     \begin{tabular}{ccccccccccc}
      \toprule
           $k$ & 2 &3 & 4 & 5 & 100 & 200 &300 &400 & 500 & 600\\
          \midrule
         $C_k$ & .4273&.4575&.4769&.4906&.5959&.6062&.6108&.6136&.6156&.6170 \\
-        $\alpha_k$ & .3824 &.3867&.3884&.3890&.3781 &.3755 &.3743&.3735&.3729&.3726 \\
+        $t_k$ & .3824 &.3867&.3884&.3890&.3781 &.3755 &.3743&.3735&.3729&.3726 \\
         \bottomrule
     \end{tabular}
-    \caption{Values of the Competitive ratio $C_k$ and the associated optimal threshold $\alpha_k$ for \algoname. Note that for $5\leq k\leq 100$ the competitive ratio of \textsc{Single-Ref} provided by~\citet{albers2020new} outperforms \algoname's competitive ratio. However, our analysis provides a tractable way for the competitive ratio that scales with $k$ since the computation of the function to optimize (and its gradients) in Theorem~\ref{thm:K_2_theorem1} is a $O(k)$.}
     \label{tab:C_k}
 \end{table}

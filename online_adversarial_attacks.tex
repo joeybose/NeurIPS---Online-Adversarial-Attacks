@@ -1,9 +1,10 @@
 \section{Online Adversarial Attacks}
 \label{online_adversarial_attacks}
-
+\looseness=-1
 Motivated by our more realistic threat model, we now consider a novel adversarial attack setting where the data is no longer static but arrives in an online fashion.
 
 \subsection{Adversarial Attacks as Secretary Problems}
+\looseness=-1
 \label{adv_sec_problem}
 The defining feature of the online threat model---in addition to streaming data and the fact that we may not have access to the target model $f_t$---is the online attack budget constraint.
 Choosing when to attack under a fixed budget in the online setting can be related to a secretary problem. We formalize this online adversarial attack problem in the boxed online threat model below.
@@ -26,7 +27,7 @@ Indeed, a successful attack vector may not exist if the perturbation budget $\ga
 If the adversary knows the true value of a datapoint then the online attack problem reduces to the original $k$-secretary. On the other hand, the adversary might not have access to $f_t$ and instead, the adversary's value function may be an estimate of the true value---e.g.\ the loss of a surrogate classifier, and the adversary must make selection decisions in the face of uncertainty.\cut{ yielding a stochastic generalization of the $k$-secretary problem.} The theory developed in this paper will tackle both the case where values $v_i:=\ell(f_t(x_i'),y_i)$ for $i \in \{1,\ldots,n\} :=[n]$ are known (\S\ref{virtual_plus}), as well as the richer stochastic setting with only estimates of $v_i\,,\, i \in [n]$ (\S\ref{stochastic_k_secretary}).
 
 
-\xhdr{Practicality of the Online Threat Model} It is tempting to consider whether in practice the adversary should forego the online attack budget and instead attack every instance. However, such a strategy poses several critical problems when operating in real world online attack scenarios. Chiefly, attacking any instance in $\mathcal{D}$ incurs a non-trivial risk that the adversary is detected by a defense mechanism. Indeed, when faced with stateful defence strategies (e.g. \cite{chen2020stateful}) every additional attacked instance further increases the risk of being detected and rendering future attack impotent. Moreover, attacking every instance may be infeasible computationally for large $n$ or impractical based on other real-world constraints. Generally speaking, as conventional adversarial attacks operate by restricting the perturbation to a fraction of the maximum possible change (e.g., $\ell_{\infty}$-attacks) online attacks analogously restrict the time window to a fraction of possible instances to attack. Similarly, knowledge of $n$ is also a factor that the adversary can easily control in practice. For instance, in the autonomous control system example the adversary can choose to be active for a short interval---e.g., when the autonomous car is a certain geospatial location---and thus set the value for $n$.
+\xhdr{Practicality of the Online Threat Model} It is tempting to consider whether in practice the adversary should forego the online attack budget and instead attack every instance. However, such a strategy poses several critical problems when operating in real-world online attack scenarios. Chiefly, attacking any instance in $\mathcal{D}$ incurs a non-trivial risk that the adversary is detected by a defense mechanism. Indeed, when faced with stateful defense strategies (e.g. \cite{chen2020stateful}) every additional attacked instance further increases the risk of being detected and rendering future attacks impotent. Moreover, attacking every instance may be infeasible computationally for large $n$ or impractical based on other real-world constraints. Generally speaking, as conventional adversarial attacks operate by restricting the perturbation to a fraction of the maximum possible change (e.g., $\ell_{\infty}$-attacks) online attacks analogously restrict the time window to a fraction of possible instances to attack. Similarly, knowledge of $n$ is also a factor that the adversary can easily control in practice. For instance, in the autonomous control system example, the adversary can choose to be active for a short interval---e.g., when the autonomous car is a certain geospatial location---and thus set the value for $n$.
 
 \begin{ftheo}
 The online threat model relies on the following key definitions:
@@ -46,9 +47,10 @@ The online threat model relies on the following key definitions:
 
 The online threat model corresponds to the setting where the adversary seeks to craft adversarial attacks (i) against a target model $f_t \in \gF$, (ii) by observing items in $\mathcal{D}$ that arrive online, (iii) and choosing $k$ optimal items to attack by relying on (iv) an available value function $\mathcal{V}$. The adversary's objective is then to use its value function towards selecting items in $\mathcal{D}$ that maximize the sum total value of selections \setvalue\ (Eq.~\ref{eq:asp}).
 \end{ftheo}
-
+%\vspace{-10pt}
 
 \subsection{\algoname\ for Adversarial Secretary Problems}
+\looseness=-1
 \label{virtual_plus}
 Let us first consider the deterministic variant of the online threat model, where the true value is known on arrival. For example consider the value function $\mathcal{V}(x_i,y_i) = \ell(f_{t}(x'_i),y_i) = v_i$ i.e. the loss resulting from the adversary corrupting incoming data $x_i$ into $x'_i$. Under a fixed attack strategy, the selection of high-value items from $\mathcal{D}$ is exactly the original $k$-secretary problem and thus the adversary may employ any $\mathcal{A}$ that solves the original $k$-secretary problem.
 
@@ -134,14 +136,14 @@ Well known single threshold-based algorithms that solve the $k$-secretary proble
 Indeed, the simple structure of both the \textsc{Virtual} and \textsc{Optimistic} algorithms---e.g., having few hyperparameters and not requiring the algorithm to involve Linear Program's for varying values of $n$ and $k$---in addition to being $(1/e)$-competitive (optimal for $k=1$) make them suitable candidates for solving \eqref{eq:asp}. However, 
 the competitive ratio of both algorithms in the small $k$ regime---but not $k=1$---has shown to be sub-optimal with \textsc{Single-Ref} provably yielding larger competitive ratios at the cost of an additional hyperparameter selected via combinatorial optimization when $n \to \infty$. 
 
-We now present a novel online algorithm \algoname\ that retains the simple structure of \textsc{Virtual} and \textsc{Optimistic}, with no extra hyperparameters, but leads to a new state-of-the-art competitive ratio for $k<5$. Our key insight is derived from re-examining the selection condition in the \textsc{Virtual} algorithm and noticing that it is overly conservative and can be simplified. The \algoname\ algorithm is presented in Algorithm 1, where the removed condition in \textsc{Virtual} (L2-3) is \st{in pink strikethrough}. Concretely, the condition that is used by \textsc{Virtual} but \emph{not} by \algoname\ updates $R$ during the selection phase without actually picking the item as part of $S_{\mathcal{A}}$. Essentially, this condition is theoretically convenient and leads to a simpler analysis by ensuring that the \textsc{Virtual} algorithm never exceeds $k$ selections in $S_{\mathcal{A}}$. \algoname\ removes this conservative $R$ update criteria in favor of a simple to implement condition, $|S_{\mathcal{A}}| \leq k$ line 4 {\color{salmon}(in pink)}. Furthermore, the new selection rule also retains the simplicity of \textsc{Virtual} leading to a painless application to online attack problems.
+We now present a novel online algorithm, \algoname, that retains the simple structure of \textsc{Virtual} and \textsc{Optimistic}, with no extra hyperparameters, but leads to a new state-of-the-art competitive ratio for $k<5$. Our key insight is derived from re-examining the selection condition in the \textsc{Virtual} algorithm and noticing that it is overly conservative and can be simplified. The \algoname\ algorithm is presented in Algorithm 1, where the removed condition in \textsc{Virtual} (L2-3) is \st{in pink strikethrough}. Concretely, the condition that is used by \textsc{Virtual} but \emph{not} by \algoname\ updates $R$ during the selection phase without actually picking the item as part of $S_{\mathcal{A}}$. Essentially, this condition is theoretically convenient and leads to a simpler analysis by ensuring that the \textsc{Virtual} algorithm never exceeds $k$ selections in $S_{\mathcal{A}}$. \algoname\ removes this conservative $R$ update criteria in favor of a simple to implement condition, $|S_{\mathcal{A}}| \leq k$ line 4 {\color{salmon}(in pink)}. Furthermore, the new selection rule also retains the simplicity of \textsc{Virtual} leading to a painless application to online attack problems.
 
 \cut{By design, \algoname\ also does not exceed $k$ selections and works for any combination of $k$ and $n$.}
 \xhdr{Competitive ratio of \algoname}
 What appears to be a minor modification in \textsc{Virtual+} compared to \textsc{Virtual} leads to a significantly more involved analysis but a larger competitive ratio. In Theorem 1, we derive the analytic expression that is a tight lower bound for the competitive ratio of \algoname\ for \emph{general}-$k$. We see that \algoname\ provably improves in competitive ratio for $k<5$ over both \textsc{Virtual}, \textsc{Optimistic}, and in particular the previous best single threshold algorithm, \textsc{Single-Ref}.
 
 \begin{theorem}
-The competitive ratio of Virtual Plus for the case $k \geq 2$ where $t = \alpha n$ can asymptotically be lower bounded by 
+The competitive ratio of \algoname\ for $k \geq 2$ with threshold $t_k = \alpha n$ can asymptotically be lower bounded by 
 \begin{equation}
     C_k \geq  \max_{\alpha \in [0,1]}  {\alpha}^k \sum_{m = 0}^{k - 1} a_m \ln^m (\alpha)- \alpha a_0
     \quad where  \quad
@@ -149,50 +151,9 @@ The competitive ratio of Virtual Plus for the case $k \geq 2$ where $t = \alpha 
     \, .
 \end{equation}
 Particularly, we get $C_2\geq0.427, C_3\geq .457, C_4\geq.4769$ outperforming~\citet{albers2020new}.
-\label{thm:K_2_theorem1}
+\label{thm:general_k_theorem1}
 \end{theorem}
 
-\cut{
-\begin{theorem}
-The competitive ratio of \algoname \ for the case $k \geq 2$ and where $t = \alpha \cdot n$ can asymptotically be lower bounded by: 
-\begin{equation}
-    C_k >  \max_{\alpha \in [0,1]}  {\alpha}^k \left (\sum_{m = 0}^{k - 1} a_m \ln^m (\alpha)\right) - \alpha a_0
-\end{equation}
-    where 
-\begin{equation}
-    a_m = \sum_{a = m}^{k - 1} \left (\frac{k}{k - 1}\right)^a \frac{(k - 1)^{m - 1}}{m!}(-1)^{m + 1}
-    \, .
-\end{equation}
-For example when $k=2$ asymptotically we have,
-% \vspace{-1mm}
-\begin{equation}
-    C \geq  \max_{\alpha \in [0,1]} \alpha ( 3(1-\alpha) + 2 \alpha \ln(\alpha)) > .4273 > 1/e \, .
-\end{equation}
-\label{thm:K_2_theorem1}
-\end{theorem}
-}
-\cut{
-\begin{theorem} For $k=2$, $t= \alpha n\,,\, \alpha \in (0,1)$, the competitive ratio achieved by \algoname\ follows,
-
-% \begin{equation}
-% % \textstyle
-%     C_n = \frac{t(t+1)}{n} \sum_{j=t+1}^n\tfrac{1}{j(j+1)} \Big(1 + 2 \sum_{p=t+1}^j \tfrac{1}{p-1}\Big)
-% \end{equation}
-% Particularly for  we get 
-% \vspace{-1mm}
-\begin{equation} \label{eq:lower_bound_alpha}
-    C \geq \alpha ( 3(1-\alpha) + 2 \alpha \ln(\alpha)) + \mathcal{O}(1/n)
-    % \vspace{-1mm}
-\end{equation}
-Thus, asymptotically  we have
-% \vspace{-1mm}
-\begin{equation}
-    C \geq  \max_{\alpha \in [0,1]} \alpha ( 3(1-\alpha) + 2 \alpha \ln(\alpha)) > .4273 > 1/e \, .
-\end{equation}
-% \vspace{-6mm}
-\label{thm:K_2_theorem1}
-\end{theorem}
-}
 % \begin{proof}[Proof sketch]
 % The full proof can be found in \S\ref{appendix:virtual_plus_proof_k_2}. First note that by~\citep[Lem.~3.3]{albers2020new}, we have a competitive ratio for the $k$-secretary problem under any threshold-based algorithm that is equal to 
 % \begin{equation}
@@ -247,12 +208,13 @@ Thus, asymptotically  we have
 
 \xhdr{Connection to Prior Work}
 \label{connection_to_prior_work}
-Theorem~\ref{thm:K_2_theorem1} gives a tractable way to compute the competitive ratio of \algoname\ for any $k$, that improve the previous state-of-the-art~\citep{albers2020new} in terms of single threshold $k$-secretary algorithms for $k<5$ and $k>100$.\footnote{\label{foot:closed_form}\citet{albers2020new} only provide competitive ratios of \textsc{Single-Ref} for $k \leq 100$. In their conclusion mentions that ``a closed formula for the competitive ratio for any value
-of $k$ is one direction of future work''. We partially answer this open question by expressing \algoname's optimal threshold as the solution of a uni-dimensional optimization problem. In Table~\ref{tab:C_k}, we provide this threshold for a wide range of $k \geq 100$.} 
+The full proof for Theorem~\ref{thm:general_k_theorem1} can be found in~\S\ref{app:general_k_proof} along with a simple but illustrative proof for $k=2$ in~\S\ref{appendix:virtual_plus_proof_k_2}.
+Theorem~\ref{thm:general_k_theorem1} gives a tractable way to compute the competitive ratio of \algoname\ for any $k$, that improve the previous state-of-the-art~\citep{albers2020new} in terms of single threshold $k$-secretary algorithms for $k<5$ and $k>100$.\footnote{\label{foot:closed_form}\citet{albers2020new} only provide competitive ratios of \textsc{Single-Ref} for $k \leq 100$ and conclude that ``a closed formula for the competitive ratio for any value
+of $k$ is one direction of future work''. We partially answer this open question by expressing \algoname's optimal threshold $t_k$ as the solution of a uni-dimensional optimization problem. In Table~\ref{tab:C_k}, we provide this threshold for a wide range of $k \geq 100$.} 
 However, it is also important to contextualize \algoname\ against recent theoretical advances in this space. 
 Most prominently, \citet{buchbinder2014secretary} and \citet{chan2014revealing} proved that the $k$-secretary problem can be solved {\em optimally} (in terms of competitive ratio) using linear programs (LPs), {\em assuming a fixed length of $n$}. But these optimal algorithms are typically not feasible in practice.
 Critically, they require individually tuning multiple thresholds by solving a separate LP with $\Omega(n k^2)$ parameters for each length of the data stream $n$, and the number of constraints grows to infinity as  $n\rightarrow\infty$. 
-In this work, we chose to focus on practical methods with a \emph{single} threshold (e.g. Algorithm~\ref{alg:virtual_plus} or \textsc{Single-Ref}~\citep{albers2020new}) that do not require involved computations that grow with $n$. 
+In this work, we focus on practical methods with a \emph{single} threshold (e.g. Algorithm~\ref{alg:virtual_plus}) that do not require involved computations that grow with $n$. 
 
 
 
