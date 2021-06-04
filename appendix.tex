@@ -5,7 +5,7 @@
 
 As an illustrative example that aids in understanding the full general-$k$ proof for for the competitive ratio \algoname\ we now prove Theorem \ref{thm:general_k_theorem1} for $k=2$ from the main paper. 
 
-\begin{theorem}  For $k=2$, the competitive ratio achieved by \algoname\ algorithm is equal to,
+\begin{theorem}  For $k=2$, the competitive ratio achieved by \algoname\ algorithm is equal to, 
 \begin{equation}
     C_n = \frac{t(t-1)}{n} \sum_{j=t}^{n-1}\frac{1}{j(j-1)} \left(1 + 2 \sum_{ p=t+1}^j \frac{1}{p-1}\right)
 \end{equation}
@@ -29,17 +29,18 @@ Thus, asymptotically  we have
 \end{figure}
 
 \begin{proof}
-First note that we can show that the competitive ratio for the $k$-secretary problem is equal to 
+First note that by \citet[Lemma 3.3]{albers2020new} we can show that the competitive ratio for the $k$-secretary problem for a monotone algorithm is equal to 
 \begin{equation}
-    C = \frac{1}{k}\sum_{a=1}^k \mathbb{P}(i_a \in S_\mathcal{A}), \label{eq:C_as_sum_prob1}
+\label{eq:C_as_sum_k_two}
+    C = \frac{1}{k}\sum_{a=1}^k \mathbb{P}(i_a \in S_\mathcal{A}), %\label{eq:C_as_sum_prob1}
 \end{equation}
-where $i_a$ is the index of the $a^{th}$ secretary picked by the offline solution ---i.e. $i_a$ is a top-$k$ secretary of $\mathcal{D}$. 
+where $i_a$ is the index of the $a^{th}$ secretary picked by the offline solution ---i.e. $i_a$ is a top-$k$ secretary of $\mathcal{D}$. By Lemma \ref{lemma_monotone} \algoname \ is a monotone algorithm and we may use ~\eqref{eq:C_as_sum_k_two}.
 Now, let us focus on the case $k=2$.
 When calculating the probability of either of the top two items in $\mathcal{D}$ being picked by the \algoname\ we must first compute the probability of one of the top-2 items being picked during the selection phase (time step $t+1 \dots n$). Now notice that \algoname\ picks an item at time step $j+1$ if and only if this is a top-2 item with respect to all of $\mathcal{D}$ and $|S_{\mathcal{A}}| \leq 2$ at time-step $j+1$. Let top-$2_j$ denote the two largest elements observed by $\mathcal{A}$ up to and inclusive of time step $j$. Thus, for $a \in \{1,2\}$, we have
 \begin{align}
     \mathbb{P}(i_a \in S_\mathcal{A}) 
-    &= \sum_{j=t}^{n-1} \mathbb{P}(i_a \in S_\mathcal{A} \text{ at time-step }j+1) \label{p_picked_equal_not_filled} \\
-    &= \frac{1}{n}\sum_{j=t}^{n-1} \mathbb{P}(|S_{\mathcal{A}}| \leq 2 \text{ at time-step } j + 1) \notag
+    &= \sum_{j=t}^{n-1} \mathbb{P}(i_a \in S_\mathcal{A} \text{ at time-step }j+1)\\ %\label{p_picked_equal_not_filled} \\
+    &= \frac{1}{n}\sum_{j=t}^{n-1} \mathbb{P}(|S_{\mathcal{A}}| < 2 \text{ at time-step } j + 1) \notag
 \end{align}
 
 Now, we compute $\mathbb{P}(|S_{\mathcal{A}}| \leq 2 \text{ at time-step } j+1)$ by decomposing this probability into the following two events: A.) $|S_{\mathcal{A}}| = 0$ where the selection set is empty and B.) the event $|S_{\mathcal{A}}| = 1$ where exactly one item has been picked. We now analyze each event in turn.
@@ -122,16 +123,17 @@ The constant term of the RHS is a concave function of $\alpha$ that is maximized
 We now prove Theorem \ref{thm:stochastic_secretary} in detail, reproduced here for convenience. 
 
 \begin{reptheorem}{thm:stochastic_secretary}
-Let us consider a secretary algorithm, $\mathcal{A}$, that is $C_n$-competitive when given access to the true values $v_i, \,i \in [n]$. When having access to independent random variables $\mathcal{V}_{i},\, i\in [n]$ such that Eq.~\ref{eq:concentration} holds, $\mathcal{A}$ has a stochastic competitive ratio of at least:  
+Let $\mathcal{A}$ be a $C$-competitive secretary algorithm that observes independent random variables $\mathcal{V}_{i},\, i\in [n]$ satisfying Eq.~\ref{eq:concentration}. If $\Delta = \tfrac{1}{2}\min_{1\leq i \neq j \leq  n } |v_i - v_j|$ is positive, then $\mathcal{A}$ has a non-vanishing stochastic competitive ratio $C_{s}$ of at least:  
 \begin{equation}
-    C_n \left( 1-e^{- \frac{\Delta}{2 \sigma^2}} \right)^{\frac{-2 \exp(- \frac{\Delta}{2 \sigma^2})}{1 -  \exp(\frac{-\Delta}{\sigma^2})}}
+    C_n \left( 1-e^{- \frac{\Delta}{2 \sigma^2}} \right)^{\left(-2 \exp(- \frac{\Delta}{2 \sigma^2})\right)/\left({1 -  \exp(\frac{-\Delta}{\sigma^2})}\right)}
+   % {\frac{-2 \exp(- \frac{\Delta}{2 \sigma^2})}{1 -  \exp(\frac{-\Delta}{\sigma^2})}}
 \end{equation}
 \end{reptheorem}
 
 \begin{proof}
-In this analysis, we will refer to a deterministic online algorithm as $\mathcal{A}$. Please note, the following statement of results holds for \textit{any} online algorithm, therefore when introducing certain lemmas we will use algorithm $\mathcal{A}$ for the name. Furthermore, we will denote the stochastic versions of $\mathcal{A}$ as $\mathcal{A}^{s}$.
+In this analysis, we will refer to the deterministic online algorithm as $\mathcal{A}$. Please note, the following statement of results holds for \textit{any} online algorithm. As a result, when introducing certain lemmas we will use algorithm $\mathcal{A}$ as a general single threshold deterministic secretary algorithm and not any specific one. Furthermore, we will denote the stochastic versions of $\mathcal{A}$ as $\mathcal{A}^{s}$.
 Let $v_1^*, v_2^*, \dots v_k^*$ be the values of top $k$ elements and let $i_1^*, i_2^* \dots i_k^*$ be their appropriate indices. Therefore, the optimal offline solutions selects set 
-$S^* = \{i_1^*, i_2^*, \dots i_k^*\}$, while a deterministic online algorithm $\mathcal{A}$ chooses set $S$, and our online algorithm $\mathcal{A}^{s}$ chooses set $S^{(s)}$. Our goal is to provide a lower bound of the kind
+$S^* = \{i_1^*, i_2^*, \dots i_k^*\}$, while a deterministic online algorithm $\mathcal{A}$ in the stochastic setting chooses set $S$, and our online algorithm $\mathcal{A}^{s}$ chooses set $S^{(s)}$. Our goal is to provide a lower bound of the kind
 \begin{equation}
      \frac{\mathbb E[|S^{(s)} \cap S^*|]}{k} \geq c\frac{\mathbb E[|S \cap S^*|]}{k}
 \end{equation}
@@ -150,52 +152,51 @@ Assuming that $\mathcal{A}$ is $C_n$-optimal, this lower bound will provide us a
 % \end{equation}
 
 
-Now, by definition, the algorithm $\mathcal{A}^{s}$, is the algorithm $\mathcal{A}$ but operating on the random variables $\mathcal{V}_1, \mathcal{V}_2, ...\mathcal{V}_n$ (instead of $v_1,\ldots, v_n$. Thus, is we call $i_a^{(s)}$ the index of the $a$ largest value among  $\mathcal{V}_1, \mathcal{V}_2, ...\mathcal{V}_n$ (note that $i_a^{(s)}$ is a random variable) we have that 
+Now, by definition the algorithm $\mathcal{A}^{s}$ is the online algorithm $\mathcal{A}$ but operating on the random variables $\mathcal{V}_1, \mathcal{V}_2, ...\mathcal{V}_n$ (instead of $v_1,\ldots, v_n$). Thus, we call $i_a^{(s)}$ the index of the $a$ largest value among  $\mathcal{V}_1, \mathcal{V}_2, ...\mathcal{V}_n$ (note that $i_a^{(s)}$ is a random variable) and we have that 
 \begin{equation}
-   \sP[i_a^* \in S] = \sP[i_a^{(s)} \in S^{(s)}|\mathcal{V}_1, \dots,\mathcal{V}_n]
+   \sP[i_a^* \in S] = \sP[i_a^{(s)} \in S^{(s)}|\mathcal{V}_1, \dots,\mathcal{V}_n],
 \end{equation}
-and thus, by summing over $a$ and taking expectation on all permutations and noting $\{i_1^{(s)},\ldots,i_k^{(s)}\} := S^*_s$
+by summing over $a$ and taking an expectation over all permutations while noting $\{i_1^{(s)},\ldots,i_k^{(s)}\} := S^*_s$
 \begin{equation}
     \sE[|S^* \cap S|] = \sE[|S^*_s \cap S^{(s)}|  \; | \mathcal{V}_1, \ldots,\mathcal{V}_n]
 \end{equation}
-Now let us note that 
-we have that the expected number indices in $S^*$ picked by $\mathcal{A}^{s}$ is larger than the expected number of indices in $S^*_s\cup S^*$, formally,
+Now it is easy to see that the expected number of indices in $S^*$ picked by $\mathcal{A}^{s}$ is larger than the expected number of indices in $S^*_s\cup S^*$. Formally,
 \begin{align}
     \sE[|S^* \cap S^{(s)}|]  \notag
     &\geq \sE[|S^* \cap S^{(s)} \cap S^*_s|] \notag \\
     &\geq \sE [ \mathbf{1}\{S^* = S^*_s\} \sE[|S^* \cap S^*_s|\,| \mathcal{V}_1, \ldots,\mathcal{V}_n]] \notag\\
-    &= \sP(S^*=S^*_s) \sE[|S^* \cap S|]
+    &= \sP(S^*=S^*_s) \sE[|S^* \cap S|].
 \end{align}
 % \begin{equation}
 %      \sum_{a=1}^k \sP[i_a^* \in S^{(s)}]
 %      \geq \sum
 %      _{a=1}^k \sP[i_a^{(s)} \in S^{(s)} \text{ and } i_a^{(s)} \in S^*]
 % \end{equation}
-Now, notice that without loss of generality we can consider that $v_1 \geq \dots \geq v_n$. Let us call, $\bar v:= \frac{v_k + v_{k+1}}{2}$, if we have $\mathcal{V}_{i_a^*} \geq \bar v \geq \mathcal{V}_{i_b^*}$ for $1 \leq a \leq k < b \leq n$ then we will have $S^*=S^*_s$. Let us formally bound this probability,
+Without loss of generality we can consider an ordering over true values $v_1 \geq \dots \geq v_n$. Also, let us denote $\bar v:= \frac{v_k + v_{k+1}}{2}$. If we consider the event $\mathcal{V}_{i_a^*} \geq \bar v \geq \mathcal{V}_{i_b^*}$ for $1 \leq a \leq k < b \leq n$ then $S^*=S^*_s$. Let us formally bound the probability of the event  $S^*=S^*_s$,
 \begin{align*}
     \sP(S^*=S^*_s) 
     &\geq \sP(\mathcal{V}_{i_1^*}, \ldots, \mathcal{V}_{i_k^*} \geq \ldots \geq \mathcal{V}_{i_{k+1}^*} , \ldots, \mathcal{V}_{i_n^*})  \\
      & \geq \sP(\mathcal{V}_{i_a^*} \geq \bar v \geq \mathcal{V}_{i_b^*}\,,\,1 \leq a \leq k < b \leq n) \\
     & \geq \sP(\mathcal{V}_{i_a^*} \geq v_a - (2(k-a)+1)\Delta\,,\,   v_b + (2(b-k)-1) \Delta \geq  \mathcal{V}_{i_b^*}\,,\,1 \leq a \leq k < b \leq n) \\
 \end{align*}
-where is the last inequality we used that because $\Delta = \tfrac{1}{2}\min_{1\leq i \neq j \leq  n } \{\mid v_i - v_j \mid \}
-$ we have
+where in the last inequality we used $\Delta = \tfrac{1}{2}\min_{1\leq i \neq j \leq  n } \{\mid v_i - v_j \mid \}
+$. Thus we have
 \begin{equation}
     v_a - (2(k-a)+1)\Delta \geq \bar v \geq  v_b + (2(b-k)-1) \Delta \,, \quad \forall \, 1 \leq a \leq k < b \leq n \,.
 \end{equation}
-Finally, using that the random variable $\mathcal{V}_i$ are independents we have,
+Finally, using the fact that the random variables $\mathcal{V}_i$ are independents we have,
 \begin{align*}
     \sP(S^*=S^*_s)      
     & \geq \sP(|\mathcal{V}_{i_a^*} - v_a| \leq  2|k+1/2-a|\Delta, \,a \in [n]) \\
     & = \prod_{a=1}^n \sP(|\mathcal{V}_{i_a^*} - v_a| \leq  2|k+1/2-a|\Delta) \\
     & \geq \prod_{i=1}^n  (1 - e^{\frac{-2|k+1/2-i|\Delta}{2\sigma^2}})
 \end{align*}
-Where for the last inequality we used the assumption that 
+Where the last inequality comes from the assumption that 
 \begin{equation}
     \sP( |\mathcal{V}_i-v_i| \geq \epsilon) \leq e^{\frac{-\epsilon^2}{2\sigma^2}} \,,\,\forall i \in [n]\,.
 \end{equation}
 
-Finally, we will lower-bound $\sum_{i=1}^n\log (1 - e^{\frac{-2|k+1/2-i|\Delta}{2\sigma^2}})$ by using the fact that for any $x$ such that $0<x<a<1$, we have by concavity of the $\log$,
+Finally, we can lower-bound $\sum_{i=1}^n\log (1 - e^{\frac{-2|k+1/2-i|\Delta}{2\sigma^2}})$ by leveraging the concavity of $\log$ for any $x$ in $0<x<a<1$, %we have by concavity of the $\log$,
 \begin{equation}
     \log(1-x) \geq \log(1-a) x \,.
 \end{equation}
@@ -208,7 +209,7 @@ Thus,
 \end{align}
 Which finally gives us,
 \begin{equation}
-     \sP(S^*=S^*_s)    \geq \left( 1-e^{- \frac{\Delta}{2 \sigma^2}} \right)^{\frac{-2 \exp(- \frac{\Delta}{2 \sigma^2})}{1 -  \exp(\frac{-\Delta}{\sigma^2})}}
+     \sP(S^*=S^*_s)    \geq \left( 1-e^{- \frac{\Delta}{2 \sigma^2}} \right)^{\left(-2 \exp(- \frac{\Delta}{2 \sigma^2})\right)/\left({1 -  \exp(\frac{-\Delta}{\sigma^2})}\right)}
 \end{equation}
 
 
@@ -338,7 +339,7 @@ We provide more details about the experiments presented in section~\ref{section:
 
 \paragraph{Attack strategies} We use two different attack strategies the Fast Gradient Sign Method (FGSM) \citep{goodfellow2014explaining} and 40 iterations of the PGD attack \citep{madry2017towards} with $l_\infty$.
 
-\paragraph{Hyper-parameters of online algorithms} All the online algorithms except \textsc{Single-Ref} have a single hyper-parameters to choose which is the length of the sampling phase $t$. For \textsc{Virtual} and \textsc{Optimistic} we use $t=\floor{ \frac{t}{e}}$ which is the value suggested by theory in \citet{babaioff2007knapsack}. For \textsc{\algoname} we use $t=\alpha n$ as in Eq.~\ref{eq:alpha_eqn} which is the value suggested by Theorem~\ref{thm:K_2_theorem1}. \textsc{Single-Ref} has two hyper-parameters to choose the threshold $t$ ($c$ in the original paper) and reference rank $r$. For $k=1...100$ the values are given in \citet{albers2020new} and are numerical solutions to combinatorial optimization problems. However, for $k = 1000$ no values are specified and we choose $c=0.13$ and $r=40$ through grid search. Indeed, these values may not be optimal ones but we leave the choice of better values as future work.
+\paragraph{Hyper-parameters of online algorithms} All the online algorithms except \textsc{Single-Ref} have a single hyper-parameters to choose which is the length of the sampling phase $t$. For \textsc{Virtual} and \textsc{Optimistic} we use $t=\floor{ \frac{t}{e}}$ which is the value suggested by theory in \citet{babaioff2007knapsack}. For \algoname \ we use $t=\alpha n$  as found by solving the maximization problem for a specific $k$ in Theorem~\ref{thm:general_k_theorem1}. \textsc{Single-Ref} has two hyper-parameters to choose the threshold $t$ ($c$ in the original paper) and reference rank $r$. For $k=1...100$ the values are given in \citet{albers2020new} and are numerical solutions to combinatorial optimization problems. However, for $k = 1000$ no values are specified and we choose $c=0.13$ and $r=40$ through grid search. Indeed, these values may not be optimal ones but we leave the choice of better values as future work.
 
 \paragraph{MNIST model architectures} For table~\ref{table:non_robust_table1}, $f_s$ and $f_t$ are chosen randomly from an ensemble of trained classifiers. The ensemble is composed of five different architectures described in table~\ref{appendix:mnist_ens_adv_training_table}, with 5 trained models per architecture.
 
@@ -371,7 +372,8 @@ In addition to the results provided in table~\ref{table:non_robust_table1}, we a
 We observe that the competitive ratio is not always a good metric to compare the actual performance of the different algorithms, since sometimes the online algorithm with the best competitive ratio is not the algorithm with the best fool rate. The knapsack ratio on the other hand seems to be a much better proxy for the actual performance of the algorithms, this is due to the fact that we're interested in picking elements that have have a good chance to fool the target classifier but are not necessarily the best possible attack.
 
 \begin{table*}[ht]
-\begin{small}
+%\begin{small}
+\footnotesize
 \caption{Competitive ratio on non-robust models using FGSM and PGD attacker and various online algorithms.}
 \label{appendix:comp_ratio_non_robust}
  \begin{center}\begin{tabular}{ c c c c c c c c }
@@ -379,16 +381,16 @@ We observe that the competitive ratio is not always a good metric to compare the
  & & \multicolumn{3}{c}{MNIST (competitive ratio)} & \multicolumn{3}{c}{CIFAR-10 (competitive ratio)}\\
  & Algorithm & $k=10$ & $k=100$ & $k=1000$ & $k=10$ & $k=100$ & $k=1000$ \\
  \midrule
- \multirow{6}{*}{FGSM}
- & \textsc{Naive} (Lower-bound) & .006 $\pm$ .001 & .010 $\pm$ .000 & .098 $\pm$ .000 & .002 $\pm$ .000 & .010 $\pm$ .000 & .100 $\pm$ .000\\
+ \multirow{6}{*}{\rotatebox[origin=c]{90}{FGSM}}
+ & \textsc{Naive} & .006 $\pm$ .001 & .010 $\pm$ .000 & .098 $\pm$ .000 & .002 $\pm$ .000 & .010 $\pm$ .000 & .100 $\pm$ .000\\
  \cmidrule{2-8}
  & \textsc{Optimistic} & .063 $\pm$ .004 & .083 $\pm$ .003 & .197 $\pm$ .003 & .035 $\pm$ .002 & .064 $\pm$ .001 & .203 $\pm$ .001\\
  & \textsc{Virtual} & .048 $\pm$ .003 & .079 $\pm$ .003 & .201 $\pm$ .003 & .030 $\pm$ .002 & .073 $\pm$ .001 & .212 $\pm$ .001\\
  & \textsc{Single-Ref} & .070 $\pm$ .004 & .135 $\pm$ .006 & .181 $\pm$ .003 & .045 $\pm$ .002 & .109 $\pm$ .002 & .174 $\pm$ .001\\
  & \algoname & .072 $\pm$ .004 & .124 $\pm$ .005 & .270 $\pm$ .005 & .043 $\pm$ .002 & .107 $\pm$ .002 & .287 $\pm$ .002\\
  \midrule
- \multirow{6}{*}{PGD}
- & \textsc{Naive} (lower bound) & .005 $\pm$ .001 & .010 $\pm$ .000 & .098 $\pm$ .000 & .001 $\pm$ .000 & .010 $\pm$ .000 & .100 $\pm$ .000\\
+ \multirow{6}{*}{\rotatebox[origin=c]{90}{PGD}}
+ & \textsc{Naive} & .005 $\pm$ .001 & .010 $\pm$ .000 & .098 $\pm$ .000 & .001 $\pm$ .000 & .010 $\pm$ .000 & .100 $\pm$ .000\\
  \cmidrule{2-8}
  & \textsc{Optimistic} & .023 $\pm$ .002 & .036 $\pm$ .001 & .156 $\pm$ .001 & .033 $\pm$ .002 & .052 $\pm$ .002 & .157 $\pm$ .002\\
  & \textsc{Virtual} & .011 $\pm$ .001 & .049 $\pm$ .001 & .173 $\pm$ .001 & .028 $\pm$ .002 & .056 $\pm$ .002 & .160 $\pm$ .002\\
@@ -396,11 +398,11 @@ We observe that the competitive ratio is not always a good metric to compare the
  & \algoname & .023 $\pm$ .002 & .059 $\pm$ .002 & .215 $\pm$ .002 & .040 $\pm$ .002 & .081 $\pm$ .003 & .200 $\pm$ .003\\
  \bottomrule
 \end{tabular}\end{center} 
-\end{small}
+%\end{small}
 \end{table*}
 
 \begin{table*}[ht]
-\begin{small}
+\footnotesize
 \caption{Knapsack ratio on non-robust models using FGSM and PGD attacker and various online algorithms.}
 \label{appendix:knap_ratio_non_robust}
  \begin{center}\begin{tabular}{ c c c c c c c c }
@@ -408,16 +410,16 @@ We observe that the competitive ratio is not always a good metric to compare the
  & & \multicolumn{3}{c}{MNIST (knapscak ratio in \%)} & \multicolumn{3}{c}{CIFAR-10 (knapsack ratio in \%)}\\
  & Algorithm & $k=10$ & $k=100$ & $k=1000$ & $k=10$ & $k=100$ & $k=1000$ \\
  \midrule
- \multirow{6}{*}{FGSM}
- & \textsc{Naive} (Lower-bound) & 19.0 $\pm$ 0.3 & 19.5 $\pm$ 0.2 & 29.9 $\pm$ 0.2 & 16.8 $\pm$ 0.2 & 20.3 $\pm$ 0.1 & 28.7 $\pm$ 0.1\\
+ \multirow{6}{*}{\rotatebox[origin=c]{90}{FGSM}}
+ & \textsc{Naive} & 19.0 $\pm$ 0.3 & 19.5 $\pm$ 0.2 & 29.9 $\pm$ 0.2 & 16.8 $\pm$ 0.2 & 20.3 $\pm$ 0.1 & 28.7 $\pm$ 0.1\\
  \cmidrule{2-8}
  & \textsc{Optimistic} & 33.0 $\pm$ 0.6 & 33.1 $\pm$ 0.3 & 42.1 $\pm$ 0.3 & 32.7 $\pm$ 0.4 & 34.1 $\pm$ 0.2 & 42.8 $\pm$ 0.2\\
  & \textsc{Virtual} & 30.8 $\pm$ 0.5 & 34.2 $\pm$ 0.3 & 42.9 $\pm$ 0.3 & 32.9 $\pm$ 0.4 & 37.8 $\pm$ 0.2 & 45.0 $\pm$ 0.2\\
  & \textsc{Single-Ref} & 39.7 $\pm$ 0.6 & 41.5 $\pm$ 0.6 & 40.2 $\pm$ 0.3 & 37.5 $\pm$ 0.5 & 45.7 $\pm$ 0.4 & 37.9 $\pm$ 0.1\\
  & \algoname & 36.2 $\pm$ 0.6 & 41.1 $\pm$ 0.6 & 51.4 $\pm$ 0.5 & 39.4 $\pm$ 0.5 & 47.1 $\pm$ 0.4 & 55.5 $\pm$ 0.3\\
  \midrule
- \multirow{6}{*}{PGD}
- & \textsc{Naive} (lower bound) & 27.2 $\pm$ 0.6 & 15.5 $\pm$ 0.3 & 25.9 $\pm$ 0.3 & 22.5 $\pm$ 0.3 & 26.8 $\pm$ 0.2 & 36.3 $\pm$ 0.2\\
+ \multirow{6}{*}{\rotatebox[origin=c]{90}{PGD}}
+ & \textsc{Naive} & 27.2 $\pm$ 0.6 & 15.5 $\pm$ 0.3 & 25.9 $\pm$ 0.3 & 22.5 $\pm$ 0.3 & 26.8 $\pm$ 0.2 & 36.3 $\pm$ 0.2\\
  \cmidrule{2-8}
  & \textsc{Optimistic} & 37.2 $\pm$ 0.9 & 24.2 $\pm$ 0.5 & 35.8 $\pm$ 0.4 & 35.3 $\pm$ 0.6 & 35.6 $\pm$ 0.4 & 43.1 $\pm$ 0.4\\
  & \textsc{Virtual} & 35.6 $\pm$ 0.9 & 27.5 $\pm$ 0.6 & 38.8 $\pm$ 0.4 & 35.5 $\pm$ 0.6 & 37.2 $\pm$ 0.5 & 43.9 $\pm$ 0.4\\
@@ -425,28 +427,27 @@ We observe that the competitive ratio is not always a good metric to compare the
  & \algoname & 41.5 $\pm$ 1.1 & 32.3 $\pm$ 0.8 & 46.5 $\pm$ 0.6 & 40.9 $\pm$ 0.7 & 42.9 $\pm$ 0.6 & 48.8 $\pm$ 0.5\\
  \bottomrule
 \end{tabular}\end{center} 
-\end{small}
 \end{table*}
 
 \begin{table*}[ht]
-\begin{small}
+\footnotesize
 \caption{Competitive ratio on robust models using FGSM and PGD attacker and various online algorithms.}
 \label{appendix:comp_ratio_robust}
  \begin{center}\begin{tabular}{ c c c c c c c c }
  \toprule
- & & \multicolumn{3}{c}{MNIST (competitive ratio)} & \multicolumn{3}{c}{CIFAR-10 (comptetitive ratio}\\
+ & & \multicolumn{3}{c}{MNIST (competitive ratio)} & \multicolumn{3}{c}{CIFAR-10 (comptetitive ratio)}\\
  & Algorithm & $k=10$ & $k=100$ & $k=1000$ & $k=10$ & $k=100$ & $k=1000$ \\
  \midrule
- \multirow{6}{*}{FGSM}
- & \textsc{Naive} (Lower-bound) & 0.00 $\pm$ 0.00 & 0.01 $\pm$ 0.00 & 0.10 $\pm$ 0.00 & 0.00 $\pm$ 0.00 & 0.01 $\pm$ 0.00 & 0.10 $\pm$ 0.00\\
+ \multirow{6}{*}{\rotatebox[origin=c]{90}{FGSM}}
+ & \textsc{Naive} & 0.00 $\pm$ 0.00 & 0.01 $\pm$ 0.00 & 0.10 $\pm$ 0.00 & 0.00 $\pm$ 0.00 & 0.01 $\pm$ 0.00 & 0.10 $\pm$ 0.00\\
  \cmidrule{2-8}
  & \textsc{Optimistic} & 0.24 $\pm$ 0.00 & 0.17 $\pm$ 0.00 & 0.33 $\pm$ 0.00 & 0.05 $\pm$ 0.00 & 0.21 $\pm$ 0.00 & 0.33 $\pm$ 0.00\\
  & \textsc{Virtual} & 0.18 $\pm$ 0.00 & 0.17 $\pm$ 0.00 & 0.33 $\pm$ 0.00 & 0.09 $\pm$ 0.00 & 0.22 $\pm$ 0.00 & 0.33 $\pm$ 0.00\\
  & \textsc{Single-Ref} & 0.27 $\pm$ 0.00 & 0.31 $\pm$ 0.00 & 0.28 $\pm$ 0.00 & 0.07 $\pm$ 0.00 & 0.39 $\pm$ 0.00 & 0.28 $\pm$ 0.00\\
  & \algoname & 0.25 $\pm$ 0.00 & 0.27 $\pm$ 0.00 & 0.49 $\pm$ 0.00 & 0.11 $\pm$ 0.00 & 0.35 $\pm$ 0.00 & 0.49 $\pm$ 0.00\\
  \midrule
- \multirow{6}{*}{PGD}
-& \textsc{Naive} (Lower-bound) & 0.00 $\pm$ 0.00 & 0.01 $\pm$ 0.00 & 0.10 $\pm$ 0.00 & 0.00 $\pm$ 0.00 & 0.01 $\pm$ 0.00 & 0.10 $\pm$ 0.00\\
+ \multirow{6}{*}{\rotatebox[origin=c]{90}{PGD}}
+& \textsc{Naive}& 0.00 $\pm$ 0.00 & 0.01 $\pm$ 0.00 & 0.10 $\pm$ 0.00 & 0.00 $\pm$ 0.00 & 0.01 $\pm$ 0.00 & 0.10 $\pm$ 0.00\\
  \cmidrule{2-8}
  & \textsc{Optimistic} & 0.10 $\pm$ 0.00 & 0.13 $\pm$ 0.00 & 0.32 $\pm$ 0.00 & 0.01 $\pm$ 0.00 & 0.15 $\pm$ 0.00 & 0.31 $\pm$ 0.00\\
  & \textsc{Virtual} & 0.09 $\pm$ 0.00 & 0.14 $\pm$ 0.00 & 0.32 $\pm$ 0.00 & 0.02 $\pm$ 0.00 & 0.16 $\pm$ 0.00 & 0.32 $\pm$ 0.00\\
@@ -454,11 +455,11 @@ We observe that the competitive ratio is not always a good metric to compare the
  & \algoname & 0.13 $\pm$ 0.00 & 0.21 $\pm$ 0.00 & 0.48 $\pm$ 0.00 & 0.02 $\pm$ 0.00 & 0.25 $\pm$ 0.00 & 0.47 $\pm$ 0.00\\
  \bottomrule
 \end{tabular}\end{center} 
-\end{small}
+
 \end{table*}
 
 \begin{table*}[ht]
-\begin{small}
+\footnotesize
 \caption{Knapsack ratio on robust models using FGSM and PGD attacker and various online algorithms.}
 \label{appendix:knap_ratio_robust}
  \begin{center}\begin{tabular}{ c c c c c c c c }
@@ -466,16 +467,16 @@ We observe that the competitive ratio is not always a good metric to compare the
  & & \multicolumn{3}{c}{MNIST (knapscak ratio in \%)} & \multicolumn{3}{c}{CIFAR-10 (knapsack ratio in \%)}\\
  & Algorithm & $k=10$ & $k=100$ & $k=1000$ & $k=10$ & $k=100$ & $k=1000$ \\
  \midrule
- \multirow{6}{*}{FGSM}
-  & \textsc{Naive} (lower bound) & 1.2 $\pm$ 0.1 & 2.2 $\pm$ 0.0 & 10.5 $\pm$ 0.1 & 9.9 $\pm$ 0.2 & 12.5 $\pm$ 0.1 & 19.7 $\pm$ 0.0\\
+ \multirow{6}{*}{\rotatebox[origin=c]{90}{FGSM}}
+  & \textsc{Naive} & 1.2 $\pm$ 0.1 & 2.2 $\pm$ 0.0 & 10.5 $\pm$ 0.1 & 9.9 $\pm$ 0.2 & 12.5 $\pm$ 0.1 & 19.7 $\pm$ 0.0\\
  \cmidrule{2-8}
  & \textsc{Optimistic} & 38.0 $\pm$ 0.5 & 26.5 $\pm$ 0.1 & 44.6 $\pm$ 0.1 & 48.8 $\pm$ 0.5 & 45.2 $\pm$ 0.1 & 48.3 $\pm$ 0.0\\
  & \textsc{Virtual} & 35.6 $\pm$ 0.4 & 27.0 $\pm$ 0.1 & 38.0 $\pm$ 0.1 & 50.9 $\pm$ 0.3 & 52.5 $\pm$ 0.1 & 50.0 $\pm$ 0.0\\
  &\textsc{Single-Ref} & 46.9 $\pm$ 0.5 & 45.2 $\pm$ 0.2 & 46.4 $\pm$ 0.1 & 59.7 $\pm$ 0.6 & 73.1 $\pm$ 0.3 & 41.3 $\pm$ 0.1\\
  & \algoname & 49.2 $\pm$ 0.4 & 41.2 $\pm$ 0.1 & 58.6 $\pm$ 0.1 & 66.2 $\pm$ 0.4 & 74.5 $\pm$ 0.1 & 70.5 $\pm$ 0.0\\
  \midrule
- \multirow{6}{*}{PGD}
- & \textsc{Naive} (lower bound) & 1.3 $\pm$ 0.1 & 2.4 $\pm$ 0.0 & 10.7 $\pm$ 0.1 & 11.9 $\pm$ 0.6 & 14.6 $\pm$ 0.2 & 21.8 $\pm$ 0.1\\
+ \multirow{6}{*}{\rotatebox[origin=c]{90}{PGD}}
+ & \textsc{Naive} & 1.3 $\pm$ 0.1 & 2.4 $\pm$ 0.0 & 10.7 $\pm$ 0.1 & 11.9 $\pm$ 0.6 & 14.6 $\pm$ 0.2 & 21.8 $\pm$ 0.1\\
  \cmidrule{2-8}
  & \textsc{Optimistic} & 31.1 $\pm$ 0.5 & 24.4 $\pm$ 0.1 & 42.7 $\pm$ 0.1 & 46.0 $\pm$ 1.4 & 45.3 $\pm$ 0.3 & 49.2 $\pm$ 0.1\\
  & \textsc{Virtual} & 29.9 $\pm$ 0.4 & 26.3 $\pm$ 0.1 & 37.9 $\pm$ 0.1 & 49.4 $\pm$ 1.2 & 52.4 $\pm$ 0.3 & 51.6 $\pm$ 0.1\\
@@ -483,7 +484,6 @@ We observe that the competitive ratio is not always a good metric to compare the
  & \algoname & 41.3 $\pm$ 0.4 & 39.7 $\pm$ 0.1 & 57.9 $\pm$ 0.1 & 63.4 $\pm$ 1.2 & 72.7 $\pm$ 0.3 & 71.2 $\pm$ 0.1\\
  \bottomrule
 \end{tabular}\end{center} 
-\end{small}
 \end{table*}
 
 \clearpage
@@ -492,7 +492,7 @@ We observe that the competitive ratio is not always a good metric to compare the
 \paragraph{Same architecture} In addition to table~\ref{table:non_robust_table1} we also provide some results on MNIST where $f_s$ and $f_t$ always have the same architecture but have different weights. This is a slightly less challenging setting as shown in \citet{bose2020adversarial}, we also observe that in this setting the adversaries are very effective against the target model.
 
 \begin{table*}[ht]
-\begin{small}
+\footnotesize
 \caption{Fool rate on non-robust models, where $f_s$ and $f_t$ have the same architecture, using FGSM and PGD attacker and various online algorithms.}
 \label{appendix:comp_ratio_same_arch}
  \begin{center}\begin{tabular}{ c c c c c }
@@ -500,7 +500,7 @@ We observe that the competitive ratio is not always a good metric to compare the
  & & \multicolumn{3}{c}{MNIST (Fool rate in \%)}\\
  & Algorithm & $k=10$ & $k=100$ & $k=1000$ \\
  \midrule
- \multirow{6}{*}{FGSM}
+ \multirow{6}{*}{\rotatebox[origin=c]{90}{FGSM}}
   & \textsc{Naive} (lower bound) & 73.5 $\pm$ 0.5 & 72.3 $\pm$ 0.4 & 72.6 $\pm$ 0.4\\
   & \textsc{Opt} (Upper-bound) & 100.0 $\pm$ 0.0 & 99.7 $\pm$ 0.0 & 98.6 $\pm$ 0.1\\
  \cmidrule{2-5}
@@ -509,7 +509,7 @@ We observe that the competitive ratio is not always a good metric to compare the
  &\textsc{Single-Ref} & 94.0 $\pm$ 0.3 & 96.3 $\pm$ 0.2 & 79.3 $\pm$ 0.3\\
  & \algoname & 96.9 $\pm$ 0.2 & 98.6 $\pm$ 0.1 & 97.5 $\pm$ 0.1\\
  \midrule
- \multirow{6}{*}{PGD}
+ \multirow{6}{*}{\rotatebox[origin=c]{90}{PGD}}
  & \textsc{Naive} (lower bound) & 91.1 $\pm$ 0.5 & 90.2 $\pm$ 0.4 & 90.0 $\pm$ 0.3\\
  & \textsc{Opt} (Upper-bound) & 98.5 $\pm$ 0.2 & 98.0 $\pm$ 0.1 & 97.4 $\pm$ 0.1\\
  \cmidrule{2-5}
@@ -519,7 +519,6 @@ We observe that the competitive ratio is not always a good metric to compare the
  & \algoname & 97.1 $\pm$ 0.3 & 97.6 $\pm$ 0.1 & 97.0 $\pm$ 0.1\\
  \bottomrule
 \end{tabular}\end{center} 
-\end{small}
 \end{table*}
 
 
